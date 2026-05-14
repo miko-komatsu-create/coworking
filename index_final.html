@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>在室状況 — コワーキングスペース</title>
+<meta name="description" content="コワーキングスペースの現在の在室状況">
+<!-- 30秒ごとに自動更新（リアルタイム購読が切れた場合の保険） -->
+<meta http-equiv="refresh" content="30">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; color: #1a1a18; min-height: 100vh; }
+  .page { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+  .header { border-bottom: 1px solid #e8e8e4; padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+  .space-name { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+  .meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .meta-text { font-size: 13px; color: #888; }
+  .updated { font-size: 12px; color: #bbb; }
+
+  .count-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+  .count-card { background: #fff; border-radius: 12px; border: 1px solid #e8e8e4; padding: 1rem; }
+  .count-num { font-size: 32px; font-weight: 700; line-height: 1; }
+  .count-lbl { font-size: 12px; color: #888; margin-top: 6px; }
+
+  .sec-lbl { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .pub-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; border-top: 3px solid #1D9E75; }
+  .av { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+  .name { font-size: 14px; font-weight: 600; }
+  .role { font-size: 12px; color: #888; }
+  .since { font-size: 11px; color: #1D9E75; }
+
+  .empty-box { text-align: center; padding: 3rem 1rem; background: #fff; border: 1px dashed #d8d8d4; border-radius: 12px; color: #aaa; font-size: 14px; }
+
+  .closed-box { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 2.5rem; text-align: center; }
+  .closed-icon { font-size: 32px; margin-bottom: 12px; }
+  .closed-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .closed-sub { font-size: 13px; color: #888; }
+
+  .footer { font-size: 12px; color: #ccc; text-align: center; padding-top: 1.5rem; border-top: 1px solid #e8e8e4; }
+  .loading { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="space-name" id="space-name">コワーキングスペース</div>
+    <div class="meta">
+      <span class="live-dot"></span>
+      <span class="meta-text" id="today-date"></span>
+      <span class="updated">最終更新: <span id="last-updated">—</span></span>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">読み込み中…</div>
+
+  <div id="main" style="display:none">
+    <!-- 非公開モード -->
+    <div id="closed-view" style="display:none">
+      <div class="closed-box">
+        <div class="closed-icon">🔒</div>
+        <div class="closed-title">現在非公開です</div>
+        <div class="closed-sub">このページは現在非公開に設定されています</div>
+      </div>
+    </div>
+
+    <!-- 公開モード -->
+    <div id="open-view">
+      <div class="count-row">
+        <div class="count-card"><div class="count-num" id="in-count">0</div><div class="count-lbl">現在在室中</div></div>
+        <div class="count-card"><div class="count-num" id="today-count">0</div><div class="count-lbl">本日の来訪者数</div></div>
+      </div>
+
+      <div class="sec-lbl">在室中のメンバー</div>
+      <div class="grid" id="member-grid">
+        <div class="empty-box">現在在室中のメンバーはいません</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Powered by コワーキングスペース在室システム</div>
+</div>
+
+<script>
+// ============================================================
+//  ★ ここを書き換えてください（admin.html と同じ値）
+// ============================================================
+const SUPABASE_URL      = 'https://qreaidasfzqiswowgsbo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Fm-cnmeEKtXwBAZmbU89cQ_ZoA7bEI4';
+// ============================================================
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const colorMap = {
+  teal:   { bg: '#E1F5EE', text: '#085041' },
+  blue:   { bg: '#E6F1FB', text: '#0C447C' },
+  pink:   { bg: '#FBEAF0', text: '#72243E' },
+  amber:  { bg: '#FAEEDA', text: '#633806' },
+  purple: { bg: '#EEEDFE', text: '#3C3489' },
+  coral:  { bg: '#FAECE7', text: '#711B0C' },
+};
+
+function initials(name) {
+  const p = name.trim().split(/\s+/);
+  return p.length >= 2 ? p[0][0] + p[1][0] : name.slice(0, 2);
+}
+function fmtTime(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function nowStr() {
+  const d = new Date();
+  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+async function loadAll() {
+  const [{ data: members }, { data: settings }] = await Promise.all([
+    db.from('members').select('*').order('name'),
+    db.from('settings').select('*'),
+  ]);
+
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+  document.getElementById('last-updated').textContent = nowStr();
+
+  const pubSetting = settings?.find(s => s.key === 'is_public');
+  const isPublic = !pubSetting || pubSetting.value === 'true';
+
+  const nameSetting = settings?.find(s => s.key === 'space_name');
+  if (nameSetting) document.getElementById('space-name').textContent = nameSetting.value;
+
+  if (!isPublic) {
+    document.getElementById('closed-view').style.display = 'block';
+    document.getElementById('open-view').style.display = 'none';
+    return;
+  }
+  document.getElementById('closed-view').style.display = 'none';
+  document.getElementById('open-view').style.display = 'block';
+
+  if (!members) return;
+  const inMembers = members.filter(m => m.is_checked_in);
+  const todayCount = members.filter(m => m.visited_today).length;
+
+  document.getElementById('in-count').textContent    = inMembers.length;
+  document.getElementById('today-count').textContent = todayCount;
+
+  const grid = document.getElementById('member-grid');
+  if (!inMembers.length) {
+    grid.innerHTML = '<div class="empty-box" style="grid-column:1/-1">現在在室中のメンバーはいません</div>';
+    return;
+  }
+  grid.innerHTML = inMembers.map(m => {
+    const c = colorMap[m.color] || colorMap.teal;
+    return '<div class="pub-card">'
+      + '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(m.name) + '</div>'
+      + '<div class="name">' + m.name + '</div>'
+      + '<div class="role">' + m.role + '</div>'
+      + (m.checked_in_at ? '<div class="since">' + fmtTime(m.checked_in_at) + '〜</div>' : '')
+      + '</div>';
+  }).join('');
+}
+
+// リアルタイム購読：メンバーや設定が変わったら即座に画面更新
+db.channel('public-realtime')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'members'  }, () => loadAll())
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'settings' }, () => loadAll())
+  .subscribe();
+
+// 初期化
+const d = new Date();
+const days = ['日','月','火','水','木','金','土'];
+document.getElementById('today-date').textContent =
+  d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日（' + days[d.getDay()] + '）';
+
+loadAll();
+</script>
+</body>
+</html>
