@@ -156,13 +156,38 @@ input:checked + .tslider:before { transform: translateX(18px); }
         <input id="r-email" class="finput" type="email" placeholder="taro@example.com">
       </div>
       <div class="field">
-        <label class="flabel">学年・役職 <span>任意</span></label>
-        <select id="r-role" class="finput">
+        <label class="flabel">属性</label>
+        <select id="r-type" class="finput" onchange="onTypeChange('r')">
           <option value="">選択してください</option>
-          <option>1年</option><option>2年</option><option>3年</option><option>4年</option>
-          <option>修士1年</option><option>修士2年</option><option>博士</option>
-          <option>スタッフ</option><option>その他</option>
+          <option value="学生（大学）">学生（大学）</option>
+          <option value="高校生">高校生</option>
+          <option value="中学生">中学生</option>
+          <option value="コミュニケーター">コミュニケーター</option>
+          <option value="スタッフ">スタッフ</option>
+          <option value="URA">URA</option>
+          <option value="社会人">社会人</option>
+          <option value="その他">その他</option>
         </select>
+      </div>
+      <div class="field" id="r-grade-wrap" style="display:none">
+        <label class="flabel">学年 <span>任意</span></label>
+        <select id="r-grade" class="finput">
+          <option value="">選択してください</option>
+          <option>学部1年</option><option>学部2年</option><option>学部3年</option><option>学部4年</option>
+          <option>修士1年</option><option>修士2年</option><option>博士</option>
+        </select>
+      </div>
+      <div class="field" id="r-schoolgrade-wrap" style="display:none">
+        <label class="flabel">学年 <span>任意</span></label>
+        <input id="r-schoolgrade" class="finput" type="text" placeholder="例：2年">
+      </div>
+      <div class="field" id="r-affiliation-wrap" style="display:none">
+        <label class="flabel">所属 <span>任意</span></label>
+        <input id="r-affiliation" class="finput" type="text" placeholder="例：〇〇株式会社 営業部">
+      </div>
+      <div class="field" id="r-other-wrap" style="display:none">
+        <label class="flabel">所属・活動など <span>任意</span></label>
+        <input id="r-other" class="finput" type="text" placeholder="よろしければご所属や活動などをお書きください">
       </div>
     </div>
     <div class="card">
@@ -354,20 +379,61 @@ async function relinkTo(id) {
 }
 
 // 新規登録
+// 属性切り替え
+function onTypeChange(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  const ids = ['grade-wrap','schoolgrade-wrap','affiliation-wrap','other-wrap'];
+  ids.forEach(id => {
+    const el = document.getElementById(prefix + '-' + id);
+    if (el) el.style.display = 'none';
+  });
+  if (type === '学生（大学）')  document.getElementById(prefix + '-grade-wrap').style.display = 'block';
+  if (type === '高校生' || type === '中学生') document.getElementById(prefix + '-schoolgrade-wrap').style.display = 'block';
+  if (type === '社会人')        document.getElementById(prefix + '-affiliation-wrap').style.display = 'block';
+  if (type === 'その他')        document.getElementById(prefix + '-other-wrap').style.display = 'block';
+}
+
+// 属性からrole文字列を生成
+function buildRole(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  if (type === '学生（大学）') {
+    const grade = document.getElementById(prefix + '-grade').value;
+    return grade ? grade : '学生（大学）';
+  }
+  if (type === '高校生' || type === '中学生') {
+    const grade = document.getElementById(prefix + '-schoolgrade').value.trim();
+    return grade ? type + grade : type;
+  }
+  if (type === '社会人') {
+    const aff = document.getElementById(prefix + '-affiliation').value.trim();
+    return aff ? '社会人・' + aff : '社会人';
+  }
+  if (type === 'その他') {
+    const other = document.getElementById(prefix + '-other').value.trim();
+    return other ? other : 'その他';
+  }
+  return type || 'メンバー';
+}
+
 async function registerMember() {
   const realName = document.getElementById('r-realname').value.trim();
   const errEl    = document.getElementById('reg-err');
   errEl.style.display = 'none';
   if (!realName) { errEl.style.display = 'block'; errEl.textContent = '本名を入力してください'; return; }
+  const memberType = document.getElementById('r-type').value;
+  if (!memberType) { errEl.style.display = 'block'; errEl.textContent = '属性を選択してください'; return; }
   const btn = document.querySelector('.btn-register');
   btn.disabled = true; btn.textContent = '登録中…';
-  const nickname = document.getElementById('r-nickname').value.trim();
-  const role     = document.getElementById('r-role').value || 'メンバー';
-  const colors   = ['teal','blue','pink','amber','purple','coral'];
+  const nickname    = document.getElementById('r-nickname').value.trim();
+  const role        = buildRole('r');
+  const affiliation = memberType === '社会人' ? document.getElementById('r-affiliation').value.trim() || null : null;
+  const colors      = ['teal','blue','pink','amber','purple','coral'];
   const { data, error } = await db.from('members').insert({
     name: realName, real_name: realName,
     email:          document.getElementById('r-email').value.trim() || null,
     role,
+    member_type:    memberType,
+    affiliation,
     nickname:       nickname || null,
     show_nickname:  document.getElementById('t-nickname').checked,
     show_role:      document.getElementById('t-role').checked,

@@ -91,13 +91,38 @@ input:checked + .mslider:before { transform:translateX(16px); }
     <input id="e-realname" class="form-input" type="text">
     <label class="form-lbl">メールアドレス</label>
     <input id="e-email" class="form-input" type="email">
-    <label class="form-lbl">学年・役職</label>
-    <select id="e-role" class="form-input">
+    <label class="form-lbl">属性</label>
+    <select id="e-type" class="form-input" onchange="onTypeChange('e')">
       <option value="">選択してください</option>
-      <option>1年</option><option>2年</option><option>3年</option><option>4年</option>
-      <option>修士1年</option><option>修士2年</option><option>博士</option>
-      <option>スタッフ</option><option>その他</option>
+      <option value="学生（大学）">学生（大学）</option>
+      <option value="高校生">高校生</option>
+      <option value="中学生">中学生</option>
+      <option value="コミュニケーター">コミュニケーター</option>
+      <option value="スタッフ">スタッフ</option>
+      <option value="URA">URA</option>
+      <option value="社会人">社会人</option>
+      <option value="その他">その他</option>
     </select>
+    <div id="e-grade-wrap" style="display:none;margin-top:8px">
+      <label class="form-lbl">学年 <span style="color:#aaa;font-size:11px">任意</span></label>
+      <select id="e-grade" class="form-input">
+        <option value="">選択してください</option>
+        <option>学部1年</option><option>学部2年</option><option>学部3年</option><option>学部4年</option>
+        <option>修士1年</option><option>修士2年</option><option>博士</option>
+      </select>
+    </div>
+    <div id="e-schoolgrade-wrap" style="display:none;margin-top:8px">
+      <label class="form-lbl">学年 <span style="color:#aaa;font-size:11px">任意</span></label>
+      <input id="e-schoolgrade" class="form-input" type="text" placeholder="例：2年">
+    </div>
+    <div id="e-affiliation-wrap" style="display:none;margin-top:8px">
+      <label class="form-lbl">所属 <span style="color:#aaa;font-size:11px">任意</span></label>
+      <input id="e-affiliation" class="form-input" type="text" placeholder="例：〇〇株式会社 営業部">
+    </div>
+    <div id="e-other-wrap" style="display:none;margin-top:8px">
+      <label class="form-lbl">所属・活動など <span style="color:#aaa;font-size:11px">任意</span></label>
+      <input id="e-other" class="form-input" type="text" placeholder="よろしければご所属や活動などをお書きください">
+    </div>
     <div class="modal-section">公開プロフィール</div>
     <label class="form-lbl">ニックネーム</label>
     <input id="e-nickname" class="form-input" type="text">
@@ -273,23 +298,63 @@ async function toggleMember(id, isIn) {
   await loadMembers();
 }
 
+function onTypeChange(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  ['grade-wrap','schoolgrade-wrap','affiliation-wrap','other-wrap'].forEach(id => {
+    const el = document.getElementById(prefix + '-' + id);
+    if (el) el.style.display = 'none';
+  });
+  if (type === '学生（大学）') document.getElementById(prefix + '-grade-wrap').style.display = 'block';
+  if (type === '高校生' || type === '中学生') document.getElementById(prefix + '-schoolgrade-wrap').style.display = 'block';
+  if (type === '社会人') document.getElementById(prefix + '-affiliation-wrap').style.display = 'block';
+  if (type === 'その他') document.getElementById(prefix + '-other-wrap').style.display = 'block';
+}
+
+function buildRole(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  if (type === '学生（大学）') {
+    const grade = document.getElementById(prefix + '-grade').value;
+    return grade ? grade : '学生（大学）';
+  }
+  if (type === '高校生' || type === '中学生') {
+    const grade = document.getElementById(prefix + '-schoolgrade').value.trim();
+    return grade ? type + grade : type;
+  }
+  if (type === '社会人') {
+    const aff = document.getElementById(prefix + '-affiliation').value.trim();
+    return aff ? '社会人・' + aff : '社会人';
+  }
+  if (type === 'その他') {
+    const other = document.getElementById(prefix + '-other').value.trim();
+    return other ? other : 'その他';
+  }
+  return type || 'メンバー';
+}
+
 function openEdit(id) {
   const members = window._membersCache || [];
   const m = members.find(x => x.id === id);
   if (!m) return;
   editingId = id;
-  document.getElementById('e-realname').value   = m.real_name || m.name || '';
-  document.getElementById('e-email').value      = m.email || '';
-  document.getElementById('e-role').value       = m.role || '';
-  document.getElementById('e-nickname').value   = m.nickname || '';
+  document.getElementById('e-realname').value    = m.real_name || m.name || '';
+  document.getElementById('e-email').value       = m.email || '';
+  document.getElementById('e-nickname').value    = m.nickname || '';
   document.getElementById('et-nickname').checked = m.show_nickname !== false;
-  document.getElementById('et-role').checked    = m.show_role !== false;
-  document.getElementById('e-interests').value  = m.interests || '';
+  document.getElementById('et-role').checked     = m.show_role !== false;
+  document.getElementById('e-interests').value   = m.interests || '';
   document.getElementById('et-interests').checked = !!m.show_interests;
-  document.getElementById('e-facebook').value   = m.facebook_url || '';
+  document.getElementById('e-facebook').value    = m.facebook_url || '';
   document.getElementById('et-facebook').checked = !!m.show_facebook;
-  document.getElementById('e-linkedin').value   = m.linkedin_url || '';
+  document.getElementById('e-linkedin').value    = m.linkedin_url || '';
   document.getElementById('et-linkedin').checked = !!m.show_linkedin;
+  // 属性セット
+  const typeEl = document.getElementById('e-type');
+  typeEl.value = m.member_type || '';
+  onTypeChange('e');
+  if (m.member_type === '学生（大学）') document.getElementById('e-grade').value = m.role || '';
+  if (m.member_type === '高校生' || m.member_type === '中学生') document.getElementById('e-schoolgrade').value = m.affiliation || '';
+  if (m.member_type === '社会人') document.getElementById('e-affiliation').value = m.affiliation || '';
+  if (m.member_type === 'その他') document.getElementById('e-other').value = m.affiliation || '';
   document.getElementById('edit-modal').classList.add('open');
 }
 
@@ -300,13 +365,21 @@ function closeEdit() {
 
 async function saveEdit() {
   if (!editingId) return;
-  const realName = document.getElementById('e-realname').value.trim();
-  const nickname = document.getElementById('e-nickname').value.trim();
+  const realName    = document.getElementById('e-realname').value.trim();
+  const nickname    = document.getElementById('e-nickname').value.trim();
+  const memberType  = document.getElementById('e-type').value;
+  const role        = buildRole('e');
+  const affiliation = memberType === '社会人'   ? document.getElementById('e-affiliation').value.trim() || null
+                    : memberType === 'その他'    ? document.getElementById('e-other').value.trim() || null
+                    : (memberType === '高校生' || memberType === '中学生') ? document.getElementById('e-schoolgrade').value.trim() || null
+                    : null;
   await db.from('members').update({
-    name:           realName || document.getElementById('e-realname').value,
+    name:           realName,
     real_name:      realName,
     email:          document.getElementById('e-email').value.trim() || null,
-    role:           document.getElementById('e-role').value || null,
+    role,
+    member_type:    memberType || null,
+    affiliation,
     nickname:       nickname || null,
     show_nickname:  document.getElementById('et-nickname').checked,
     show_role:      document.getElementById('et-role').checked,
