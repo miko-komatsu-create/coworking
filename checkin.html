@@ -14,41 +14,38 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 .logo-sub { font-size: 13px; color: #888; margin-top: 4px; }
 .screen { display: none; }
 .screen.active { display: block; }
-.search-box { width: 100%; padding: 12px 14px; font-size: 15px; border: 1px solid #d8d8d4; border-radius: 10px; background: #fff; margin-bottom: 1rem; }
-.search-box:focus { outline: none; border-color: #1D9E75; }
-.member-list { display: flex; flex-direction: column; gap: 8px; }
-.member-row { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: .875rem 1rem; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color .15s; }
-.member-row:hover { border-color: #1D9E75; }
-.member-row.in { border-left: 3px solid #1D9E75; }
-.av { width: 40px; height: 40px; border-radius: 50%; background: #E1F5EE; color: #085041; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
-.mname { font-size: 15px; font-weight: 600; }
-.mrole { font-size: 12px; color: #888; }
-.badge-in  { margin-left: auto; background: #E1F5EE; color: #085041; font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 600; white-space: nowrap; }
-.badge-out { margin-left: auto; background: #f0f0ec; color: #aaa; font-size: 11px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
-.new-btn { width: 100%; padding: 14px; background: #fff; border: 2px dashed #d8d8d4; border-radius: 12px; font-size: 14px; color: #888; cursor: pointer; margin-top: 12px; }
-.new-btn:hover { border-color: #1D9E75; color: #1D9E75; }
-.checkin-card { background: #fff; border-radius: 16px; border: 1px solid #e8e8e4; padding: 2rem; text-align: center; }
-.ci-av { width: 72px; height: 72px; border-radius: 50%; background: #E1F5EE; color: #085041; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; margin: 0 auto 1rem; }
-.ci-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+
+/* チェックイン画面 */
+.checkin-card { background: #fff; border-radius: 20px; border: 1px solid #e8e8e4; padding: 2.5rem 2rem; text-align: center; }
+.ci-av { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 1rem; }
+.ci-name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
 .ci-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
-.ci-status { font-size: 14px; color: #888; margin-bottom: 1.5rem; padding: 10px; background: #f5f5f3; border-radius: 8px; }
+.ci-interests { font-size: 13px; color: #555; background: #f0f0ec; border-radius: 99px; padding: 4px 14px; display: inline-block; margin-bottom: 1.5rem; }
+.ci-status { font-size: 14px; margin-bottom: 1.75rem; padding: 12px; background: #f5f5f3; border-radius: 10px; }
 .ci-status.in { color: #085041; background: #E1F5EE; }
-.btn-checkin  { width: 100%; padding: 16px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
-.btn-checkout { width: 100%; padding: 16px; background: #fff; color: #0F6E56; border: 2px solid #1D9E75; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
-.btn-back { width: 100%; padding: 12px; background: none; border: none; color: #aaa; font-size: 14px; cursor: pointer; }
-.done-icon { font-size: 48px; margin-bottom: 1rem; }
-.done-msg { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-.done-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+.btn-checkin  { width: 100%; padding: 18px; background: #1D9E75; color: #fff; border: none; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+.btn-checkout { width: 100%; padding: 18px; background: #fff; color: #0F6E56; border: 2px solid #1D9E75; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
+.btn-other { width: 100%; padding: 10px; background: none; border: none; color: #bbb; font-size: 13px; cursor: pointer; margin-top: 4px; }
+
+/* 完了画面 */
+.done-card { background: #fff; border-radius: 20px; border: 1px solid #e8e8e4; padding: 2.5rem 2rem; text-align: center; }
+.done-icon { font-size: 56px; margin-bottom: 1rem; }
+.done-msg { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+.done-sub { font-size: 14px; color: #888; margin-bottom: 1.75rem; }
+.done-time { font-size: 13px; color: #1D9E75; margin-bottom: 1.5rem; }
 .btn-return { width: 100%; padding: 14px; background: #f0f0ec; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
-.form-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
-.form-sub { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+
+/* 登録フォーム */
+.form-header { text-align: center; margin-bottom: 1.5rem; }
+.form-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.form-sub { font-size: 13px; color: #888; }
 .card { background: #fff; border-radius: 14px; border: 1px solid #e8e8e4; padding: 1.25rem; margin-bottom: 1rem; }
 .card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1rem; }
 .field { margin-bottom: 1rem; }
 .field:last-child { margin-bottom: 0; }
 .flabel { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
 .flabel span { color: #aaa; font-size: 11px; margin-left: 4px; }
-.finput { font-size: 14px; padding: 10px 12px; border: 1px solid #d8d8d4; border-radius: 8px; background: #fff; color: #1a1a18; width: 100%; }
+.finput { font-size: 15px; padding: 11px 13px; border: 1px solid #d8d8d4; border-radius: 9px; background: #fff; color: #1a1a18; width: 100%; }
 .finput:focus { outline: none; border-color: #1D9E75; }
 .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid #f0f0ec; }
 .toggle-lbl { font-size: 13px; color: #555; }
@@ -58,12 +55,19 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 .tslider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
 input:checked + .tslider { background: #1D9E75; }
 input:checked + .tslider:before { transform: translateX(18px); }
-.btn-register { width: 100%; padding: 14px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: .5rem; }
-.btn-register:hover { background: #0F6E56; }
+.btn-register { width: 100%; padding: 15px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: .5rem; }
+.btn-register:disabled { background: #aaa; cursor: not-allowed; }
 .err { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: .75rem 1rem; font-size: 13px; margin-bottom: 1rem; display: none; }
-.loading { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
-.empty { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
-.sec-lbl { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin: .75rem 0 .4rem; }
+.loading-screen { text-align: center; padding: 4rem 1rem; color: #aaa; }
+.loading-spinner { font-size: 32px; animation: spin 1s linear infinite; display: inline-block; margin-bottom: 1rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 既存ユーザー確認 */
+.already-card { background: #fff; border-radius: 20px; border: 1px solid #e8e8e4; padding: 2rem; text-align: center; }
+.already-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.already-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+.btn-yes { width: 100%; padding: 14px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
+.btn-no  { width: 100%; padding: 14px; background: #f0f0ec; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -73,36 +77,73 @@ input:checked + .tslider:before { transform: translateX(18px); }
     <div class="logo-sub">入退館</div>
   </div>
 
-  <div class="screen active" id="screen-list">
-    <input class="search-box" type="text" placeholder="名前・ニックネームで検索..." id="search-input" oninput="filterList()">
-    <div class="member-list" id="member-list"><div class="loading">読み込み中…</div></div>
-    <button class="new-btn" onclick="showRegister()">＋ 初めての方はこちらで登録</button>
+  <!-- ローディング -->
+  <div class="screen active" id="screen-loading">
+    <div class="loading-screen">
+      <div class="loading-spinner">⏳</div>
+      <div>読み込み中…</div>
+    </div>
   </div>
 
+  <!-- チェックイン/アウト -->
   <div class="screen" id="screen-checkin">
     <div class="checkin-card">
       <div class="ci-av" id="ci-av"></div>
       <div class="ci-name" id="ci-name"></div>
       <div class="ci-sub"  id="ci-sub"></div>
+      <div id="ci-interests-wrap" style="display:none"><div class="ci-interests" id="ci-interests"></div></div>
       <div class="ci-status" id="ci-status"></div>
-      <button class="btn-checkin"  id="btn-in"  onclick="doCheckin(true)"  style="display:none">入館する</button>
-      <button class="btn-checkout" id="btn-out" onclick="doCheckin(false)" style="display:none">退館する</button>
-      <button class="btn-back" onclick="showList()">← 戻る</button>
+      <button class="btn-checkin"  id="btn-in"  onclick="doCheckin(true)"  style="display:none">✅ 入館する</button>
+      <button class="btn-checkout" id="btn-out" onclick="doCheckin(false)" style="display:none">👋 退館する</button>
+      <button class="btn-other" onclick="showOtherUser()">別の人としてチェックイン</button>
     </div>
   </div>
 
+  <!-- 完了 -->
   <div class="screen" id="screen-done">
-    <div class="checkin-card">
+    <div class="done-card">
       <div class="done-icon" id="done-icon"></div>
       <div class="done-msg"  id="done-msg"></div>
       <div class="done-sub"  id="done-sub"></div>
-      <button class="btn-return" onclick="showList()">一覧に戻る</button>
+      <div class="done-time" id="done-time"></div>
     </div>
   </div>
 
+  <!-- 既存ユーザー確認（デバイスリセット後） -->
+  <div class="screen" id="screen-already">
+    <div class="already-card">
+      <div style="font-size:36px;margin-bottom:1rem">📱</div>
+      <div class="already-title">以前登録したことがありますか？</div>
+      <div class="already-sub">このデバイスの登録情報が見つかりませんでした。以前登録済みの場合は名前で検索して再連携できます。</div>
+      <button class="btn-yes" onclick="showRelink()">はい、以前登録しました</button>
+      <button class="btn-no"  onclick="showRegister()">初めて登録する</button>
+    </div>
+  </div>
+
+  <!-- 再連携（名前検索） -->
+  <div class="screen" id="screen-relink">
+    <div class="form-header">
+      <div class="form-title">アカウントを探す</div>
+      <div class="form-sub">登録済みの名前またはニックネームを入力してください</div>
+    </div>
+    <div class="err" id="relink-err"></div>
+    <div class="card">
+      <div class="field">
+        <label class="flabel">名前・ニックネーム</label>
+        <input id="relink-input" class="finput" type="text" placeholder="山田 太郎 または タロウ" oninput="searchRelink()">
+      </div>
+      <div id="relink-results" style="margin-top:.75rem"></div>
+    </div>
+    <button class="btn-no" onclick="showRegister()" style="width:100%;margin-top:8px">見つからない → 新規登録</button>
+    <button class="btn-other" onclick="showScreen('screen-already')" style="width:100%;margin-top:4px">← 戻る</button>
+  </div>
+
+  <!-- 新規登録 -->
   <div class="screen" id="screen-register">
-    <div class="form-title">新規登録</div>
-    <div class="form-sub">登録後、QRを読み込むだけで入退館できます</div>
+    <div class="form-header">
+      <div class="form-title">新規登録</div>
+      <div class="form-sub">登録後、QRを読み込むだけで入退館できます</div>
+    </div>
     <div class="err" id="reg-err"></div>
     <div class="card">
       <div class="card-title">基本情報（管理者のみ表示）</div>
@@ -167,17 +208,26 @@ input:checked + .tslider:before { transform: translateX(18px); }
       </div>
     </div>
     <button class="btn-register" onclick="registerMember()">登録する</button>
-    <button class="btn-back" onclick="showList()" style="width:100%;margin-top:8px">← 戻る</button>
+    <button class="btn-other" onclick="showScreen('screen-already')" style="width:100%;margin-top:4px">← 戻る</button>
   </div>
 </div>
 
 <script>
 const SUPABASE_URL      = 'https://qreaidasfzqiswowgsbo.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Fm-cnmeEKtXwBAZmbU89cQ_ZoA7bEI4';
+const STORAGE_KEY = 'coworking_member_id';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let allMembers = [];
+const colorMap = {
+  teal:   { bg: '#E1F5EE', text: '#085041' },
+  blue:   { bg: '#E6F1FB', text: '#0C447C' },
+  pink:   { bg: '#FBEAF0', text: '#72243E' },
+  amber:  { bg: '#FAEEDA', text: '#633806' },
+  purple: { bg: '#EEEDFE', text: '#3C3489' },
+  coral:  { bg: '#FAECE7', text: '#711B0C' },
+};
+
 let currentMember = null;
 
 function initials(name) {
@@ -190,65 +240,47 @@ function fmtTime(iso) {
   const d = new Date(iso);
   return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
-function getDisplayName(m) {
-  if (m.show_nickname && m.nickname) return m.nickname;
-  return m.name;
-}
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
-function showList()     { loadMembers(); showScreen('screen-list'); }
-function showRegister() { showScreen('screen-register'); }
+function showRegister()  { showScreen('screen-register'); }
+function showRelink()    { showScreen('screen-relink'); }
+function showOtherUser() { localStorage.removeItem(STORAGE_KEY); init(); }
 
-async function loadMembers() {
-  const { data, error } = await db.from('members').select('*').order('name');
-  if (error) return;
-  allMembers = data || [];
-  renderList(allMembers);
+// 起動時：localStorageにIDがあれば即チェックイン画面へ
+async function init() {
+  showScreen('screen-loading');
+  const savedId = localStorage.getItem(STORAGE_KEY);
+  if (savedId) {
+    const { data, error } = await db.from('members').select('*').eq('id', savedId).single();
+    if (data && !error) {
+      showCheckinScreen(data);
+      return;
+    }
+    // IDが無効（削除済みなど）
+    localStorage.removeItem(STORAGE_KEY);
+  }
+  // 未登録 or リセット後
+  showScreen('screen-already');
 }
 
-function renderList(members) {
-  const el = document.getElementById('member-list');
-  if (!members.length) { el.innerHTML = '<div class="empty">登録されたメンバーがいません</div>'; return; }
-  const inM  = members.filter(m => m.is_checked_in);
-  const outM = members.filter(m => !m.is_checked_in);
-  let html = '';
-  if (inM.length)  html += '<div class="sec-lbl">在室中 (' + inM.length + ')</div>';
-  inM.forEach(m => { html += memberRow(m); });
-  if (outM.length) html += '<div class="sec-lbl">退室中</div>';
-  outM.forEach(m => { html += memberRow(m); });
-  el.innerHTML = html;
-}
-
-function memberRow(m) {
-  const dn  = getDisplayName(m);
-  const sub = (m.show_role && m.role) ? m.role : '';
-  return '<div class="member-row' + (m.is_checked_in ? ' in' : '') + '" onclick="selectMember(\'' + m.id + '\')">'
-    + '<div class="av">' + initials(dn) + '</div>'
-    + '<div><div class="mname">' + dn + '</div>' + (sub ? '<div class="mrole">' + sub + '</div>' : '') + '</div>'
-    + (m.is_checked_in ? '<span class="badge-in">在室</span>' : '<span class="badge-out">退室</span>')
-    + '</div>';
-}
-
-function filterList() {
-  const q = document.getElementById('search-input').value.trim().toLowerCase();
-  if (!q) { renderList(allMembers); return; }
-  renderList(allMembers.filter(m => {
-    const dn = (m.nickname || m.name || '').toLowerCase();
-    return dn.includes(q);
-  }));
-}
-
-function selectMember(id) {
-  const m = allMembers.find(x => x.id === id);
-  if (!m) return;
+function showCheckinScreen(m) {
   currentMember = m;
-  const dn = getDisplayName(m);
-  document.getElementById('ci-av').textContent   = initials(dn);
-  document.getElementById('ci-name').textContent = dn;
-  document.getElementById('ci-sub').textContent  = (m.show_role && m.role) ? m.role : '';
+  const dn = (m.show_nickname && m.nickname) ? m.nickname : m.name;
+  const c  = colorMap[m.color] || colorMap.teal;
+  document.getElementById('ci-av').style.background = c.bg;
+  document.getElementById('ci-av').style.color      = c.text;
+  document.getElementById('ci-av').textContent      = initials(dn);
+  document.getElementById('ci-name').textContent    = dn;
+  document.getElementById('ci-sub').textContent     = (m.show_role && m.role) ? m.role : '';
+  if (m.show_interests && m.interests) {
+    document.getElementById('ci-interests').textContent = m.interests;
+    document.getElementById('ci-interests-wrap').style.display = 'block';
+  } else {
+    document.getElementById('ci-interests-wrap').style.display = 'none';
+  }
   const statusEl = document.getElementById('ci-status');
   const btnIn    = document.getElementById('btn-in');
   const btnOut   = document.getElementById('btn-out');
@@ -258,7 +290,7 @@ function selectMember(id) {
     btnIn.style.display  = 'none';
     btnOut.style.display = 'block';
   } else {
-    statusEl.textContent = '現在退室中';
+    statusEl.textContent = '現在退室中です';
     statusEl.className   = 'ci-status';
     btnIn.style.display  = 'block';
     btnOut.style.display = 'none';
@@ -268,6 +300,8 @@ function selectMember(id) {
 
 async function doCheckin(isIn) {
   if (!currentMember) return;
+  document.getElementById('btn-in').disabled  = true;
+  document.getElementById('btn-out').disabled = true;
   const now = new Date().toISOString();
   const updates = isIn
     ? { is_checked_in: true, checked_in_at: now, visited_today: true }
@@ -276,23 +310,61 @@ async function doCheckin(isIn) {
   await db.from('checkin_logs').insert({
     member_id: currentMember.id, member_name: currentMember.name, action: isIn ? 'in' : 'out',
   });
-  const dn = getDisplayName(currentMember);
+  const dn = (currentMember.show_nickname && currentMember.nickname) ? currentMember.nickname : currentMember.name;
   document.getElementById('done-icon').textContent = isIn ? '✅' : '👋';
-  document.getElementById('done-msg').textContent  = isIn ? '入館しました！' : '退館しました！';
-  document.getElementById('done-sub').textContent  = dn + 'さん、' + (isIn ? 'ようこそ！' : 'お疲れ様でした！');
+  document.getElementById('done-msg').textContent  = isIn ? 'いらっしゃい！' : 'お疲れ様でした！';
+  document.getElementById('done-sub').textContent  = dn + 'さん';
+  document.getElementById('done-time').textContent = fmtTime(now) + (isIn ? ' 入館' : ' 退館');
   showScreen('screen-done');
-  setTimeout(() => showList(), 3000);
+  // 3秒後に最新情報で戻る
+  setTimeout(async () => {
+    const { data } = await db.from('members').select('*').eq('id', currentMember.id).single();
+    if (data) showCheckinScreen(data);
+  }, 3000);
 }
 
+// 再連携：名前で検索
+let relinkTimer = null;
+async function searchRelink() {
+  clearTimeout(relinkTimer);
+  const q = document.getElementById('relink-input').value.trim();
+  const resultsEl = document.getElementById('relink-results');
+  if (q.length < 1) { resultsEl.innerHTML = ''; return; }
+  relinkTimer = setTimeout(async () => {
+    const { data } = await db.from('members').select('id, name, nickname, role').order('name');
+    const filtered = (data || []).filter(m => {
+      const n = (m.nickname || '').toLowerCase();
+      const r = (m.name || '').toLowerCase();
+      return n.includes(q.toLowerCase()) || r.includes(q.toLowerCase());
+    });
+    if (!filtered.length) { resultsEl.innerHTML = '<p style="font-size:13px;color:#aaa;padding:.5rem 0">見つかりませんでした</p>'; return; }
+    resultsEl.innerHTML = filtered.map(m =>
+      '<div onclick="relinkTo(\'' + m.id + '\')" style="padding:.75rem;border:1px solid #e8e8e4;border-radius:9px;margin-bottom:6px;cursor:pointer;background:#f9f9f7">'
+      + '<div style="font-size:14px;font-weight:600">' + (m.nickname || m.name) + '</div>'
+      + '<div style="font-size:12px;color:#888">' + (m.role || '') + '</div>'
+      + '</div>'
+    ).join('');
+  }, 300);
+}
+
+async function relinkTo(id) {
+  localStorage.setItem(STORAGE_KEY, id);
+  const { data } = await db.from('members').select('*').eq('id', id).single();
+  if (data) showCheckinScreen(data);
+}
+
+// 新規登録
 async function registerMember() {
   const realName = document.getElementById('r-realname').value.trim();
   const errEl    = document.getElementById('reg-err');
   errEl.style.display = 'none';
   if (!realName) { errEl.style.display = 'block'; errEl.textContent = '本名を入力してください'; return; }
+  const btn = document.querySelector('.btn-register');
+  btn.disabled = true; btn.textContent = '登録中…';
   const nickname = document.getElementById('r-nickname').value.trim();
   const role     = document.getElementById('r-role').value || 'メンバー';
   const colors   = ['teal','blue','pink','amber','purple','coral'];
-  const { error } = await db.from('members').insert({
+  const { data, error } = await db.from('members').insert({
     name: realName, real_name: realName,
     email:          document.getElementById('r-email').value.trim() || null,
     role,
@@ -306,12 +378,14 @@ async function registerMember() {
     linkedin_url:   document.getElementById('r-linkedin').value.trim() || null,
     show_linkedin:  document.getElementById('t-linkedin').checked,
     color:          colors[Math.floor(Math.random() * colors.length)],
-  });
+  }).select().single();
+  btn.disabled = false; btn.textContent = '登録する';
   if (error) { errEl.style.display = 'block'; errEl.textContent = '登録エラー: ' + error.message; return; }
-  showList();
+  localStorage.setItem(STORAGE_KEY, data.id);
+  showCheckinScreen(data);
 }
 
-loadMembers();
+init();
 </script>
 </body>
 </html>
