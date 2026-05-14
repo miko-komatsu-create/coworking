@@ -57,6 +57,14 @@
   .act-btn { padding: 6px 14px; font-size: 12px; border: 1px solid #d8d8d4; border-radius: 8px; cursor: pointer; background: none; font-weight: 500; white-space: nowrap; }
   .act-btn.ci { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
   .act-btn.co { border-color: #1D9E75; color: #0F6E56; }
+  .act-btn.edit { color: #888; }
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:#fff; border-radius:14px; padding:1.5rem; width:90%; max-width:360px; }
+  .modal h2 { font-size:16px; font-weight:600; margin-bottom:1rem; }
+  .modal-btns { display:flex; gap:8px; margin-top:1rem; }
+  .btn-cancel { flex:1; padding:10px; background:#f0f0ec; border:none; border-radius:8px; font-size:14px; cursor:pointer; }
+  .btn-save { flex:1; padding:10px; background:#1D9E75; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
 
   .card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1.25rem; }
   .form-lbl { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
@@ -83,6 +91,19 @@
 </style>
 </head>
 <body>
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h2>メンバーを編集</h2>
+    <label class="form-lbl">名前</label>
+    <input id="edit-name" class="form-input" type="text">
+    <label class="form-lbl">職種・役割</label>
+    <input id="edit-role" class="form-input" type="text">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeEdit()">キャンセル</button>
+      <button class="btn-save" onclick="saveEdit()">保存する</button>
+    </div>
+  </div>
+</div>
 <div class="page">
   <h1><span class="live"></span>管理画面</h1>
   <p class="sub" id="today-date"></p>
@@ -183,6 +204,7 @@ async function loadMembers() {
   const { data, error } = await db.from('members').select('*').order('name');
   document.getElementById('members-loading').style.display = 'none';
   if (error) { showError('err-msg', 'メンバー取得エラー: ' + error.message); return; }
+  window._membersCache = data;
   renderMembers(data);
   updateStats(data);
 }
@@ -214,10 +236,39 @@ function memberCard(m) {
   const btn = m.is_checked_in
     ? '<button class="act-btn co" onclick="toggleMember(\'' + m.id + '\', false)">退館</button>'
     : '<button class="act-btn ci" onclick="toggleMember(\'' + m.id + '\', true)">入館</button>';
+  const editBtn = '<button class="act-btn edit" onclick="openEdit(\'' + m.id + '\')">編集</button>';
   return '<div class="mc' + (m.is_checked_in ? ' in' : '') + '">'
     + '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(m.name) + '</div>'
     + '<div class="mi"><div class="mn">' + m.name + '</div><div class="mr">' + m.role + '</div>' + timeStr + '</div>'
-    + badge + btn + '</div>';
+    + badge + editBtn + btn + '</div>';
+}
+
+let editingId = null;
+let editingMembers = [];
+
+function openEdit(id) {
+  const { data } = window._membersCache || {};
+  const allMembers = window._membersCache || [];
+  const m = allMembers.find(x => x.id === id);
+  if (!m) return;
+  editingId = id;
+  document.getElementById('edit-name').value = m.name;
+  document.getElementById('edit-role').value = m.role;
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEdit() {
+  editingId = null;
+  document.getElementById('edit-modal').classList.remove('open');
+}
+
+async function saveEdit() {
+  const name = document.getElementById('edit-name').value.trim();
+  const role = document.getElementById('edit-role').value.trim();
+  if (!name || !editingId) return;
+  await db.from('members').update({ name, role }).eq('id', editingId);
+  closeEdit();
+  await loadMembers();
 }
 
 function updateStats(members) {
