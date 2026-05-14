@@ -6,146 +6,172 @@
 <title>管理画面 — コワーキングスペース</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  /* ========= 設定：ここを書き換えてください ========= */
-  /* index.html の <script> 内にも同じ値を書く必要があります */
-
-  :root {
-    --teal-bg: #E1F5EE; --teal-text: #085041; --teal-border: #5DCAA5;
-    --blue-bg:  #E6F1FB; --blue-text:  #0C447C;
-    --pink-bg:  #FBEAF0; --pink-text:  #72243E;
-    --amber-bg: #FAEEDA; --amber-text: #633806;
-    --purple-bg:#EEEDFE; --purple-text:#3C3489;
-    --coral-bg: #FAECE7; --coral-text: #711B0C;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; color: #1a1a18; min-height: 100vh; }
-  .page { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-  h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-  .sub { font-size: 13px; color: #888; margin-bottom: 1.25rem; }
-  .live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; animation: pulse 2s infinite; margin-right: 6px; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-
-  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.25rem; }
-  .stat { background: #fff; border-radius: 10px; border: 1px solid #e8e8e4; padding: .875rem 1rem; }
-  .stat-num { font-size: 24px; font-weight: 600; }
-  .stat-lbl { font-size: 12px; color: #888; margin-top: 2px; }
-
-  .pub-row { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #e8e8e4; border-radius: 10px; padding: .875rem 1rem; margin-bottom: 1.25rem; }
-  .pub-lbl { font-size: 14px; font-weight: 500; }
-  .pub-sub { font-size: 12px; color: #888; margin-top: 2px; }
-  .toggle { position: relative; width: 44px; height: 24px; }
-  .toggle input { opacity: 0; width: 0; height: 0; }
-  .slider { position: absolute; inset: 0; background: #ccc; border-radius: 12px; transition: .2s; cursor: pointer; }
-  .slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
-  input:checked + .slider { background: #1D9E75; }
-  input:checked + .slider:before { transform: translateX(20px); }
-
-  .tabs { display: flex; gap: 4px; border-bottom: 1px solid #e8e8e4; margin-bottom: 1rem; }
-  .tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border: none; background: none; color: #888; border-bottom: 2px solid transparent; margin-bottom: -1px; }
-  .tab.active { color: #0F6E56; border-bottom-color: #1D9E75; font-weight: 600; }
-
-  .sec-lbl { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin: 1rem 0 .5rem; }
-  .mc { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: .75rem 1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-  .mc.in { border-left: 3px solid #1D9E75; }
-  .av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
-  .mi { flex: 1; min-width: 0; }
-  .mn { font-size: 14px; font-weight: 600; }
-  .mr { font-size: 12px; color: #888; }
-  .mt { font-size: 11px; color: #1D9E75; }
-  .badge-in  { background: #E1F5EE; color: #085041; font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 600; white-space: nowrap; }
-  .badge-out { background: #f0f0ec; color: #888; font-size: 11px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
-  .act-btn { padding: 6px 14px; font-size: 12px; border: 1px solid #d8d8d4; border-radius: 8px; cursor: pointer; background: none; font-weight: 500; white-space: nowrap; }
-  .act-btn.ci { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
-  .act-btn.co { border-color: #1D9E75; color: #0F6E56; }
-  .act-btn.edit { color: #888; }
-  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:center; justify-content:center; }
-  .modal-overlay.open { display:flex; }
-  .modal { background:#fff; border-radius:14px; padding:1.5rem; width:90%; max-width:360px; }
-  .modal h2 { font-size:16px; font-weight:600; margin-bottom:1rem; }
-  .modal-btns { display:flex; gap:8px; margin-top:1rem; }
-  .btn-cancel { flex:1; padding:10px; background:#f0f0ec; border:none; border-radius:8px; font-size:14px; cursor:pointer; }
-  .btn-save { flex:1; padding:10px; background:#1D9E75; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-
-  .card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1.25rem; }
-  .form-lbl { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
-  .form-input { font-size: 14px; padding: 9px 12px; border: 1px solid #d8d8d4; border-radius: 8px; background: #fff; color: #1a1a18; width: 100%; margin-bottom: 12px; }
-  .form-input:focus { outline: none; border-color: #1D9E75; }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .color-row { display: flex; gap: 8px; margin-bottom: 14px; }
-  .cc { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color .15s; }
-  .btn-primary { width: 100%; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
-  .btn-primary:hover { background: #0F6E56; }
-
-  .log-entry { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #fff; border: 1px solid #e8e8e4; border-radius: 8px; font-size: 13px; margin-bottom: 6px; }
-  .log-t { color: #aaa; min-width: 50px; font-variant-numeric: tabular-nums; }
-  .log-n { flex: 1; font-weight: 500; }
-  .log-ai { color: #085041; }
-  .log-ao { color: #888; }
-
-  .empty { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
-  .loading { text-align: center; padding: 1.5rem; color: #aaa; font-size: 13px; }
-  .error-msg { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: .75rem 1rem; font-size: 13px; margin-bottom: 1rem; display: none; }
-  #config-notice { background: #FAEEDA; color: #633806; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; font-size: 13px; line-height: 1.6; }
-  #config-notice strong { font-weight: 700; }
-  #config-notice code { background: #fff; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; color: #1a1a18; min-height: 100vh; }
+.page { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.sub { font-size: 13px; color: #888; margin-bottom: 1.25rem; }
+.live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; animation: pulse 2s infinite; margin-right: 6px; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.25rem; }
+.stat { background: #fff; border-radius: 10px; border: 1px solid #e8e8e4; padding: .875rem 1rem; }
+.stat-num { font-size: 24px; font-weight: 600; }
+.stat-lbl { font-size: 12px; color: #888; margin-top: 2px; }
+.pub-row { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #e8e8e4; border-radius: 10px; padding: .875rem 1rem; margin-bottom: 1.25rem; }
+.pub-lbl { font-size: 14px; font-weight: 500; }
+.pub-sub { font-size: 12px; color: #888; margin-top: 2px; }
+.toggle { position: relative; width: 44px; height: 24px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; background: #ccc; border-radius: 12px; transition: .2s; cursor: pointer; }
+.slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+input:checked + .slider { background: #1D9E75; }
+input:checked + .slider:before { transform: translateX(20px); }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid #e8e8e4; margin-bottom: 1rem; }
+.tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border: none; background: none; color: #888; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab.active { color: #0F6E56; border-bottom-color: #1D9E75; font-weight: 600; }
+.sec-lbl { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin: 1rem 0 .5rem; }
+.mc { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: .75rem 1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.mc.in { border-left: 3px solid #1D9E75; }
+.av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+.mi { flex: 1; min-width: 0; }
+.mn { font-size: 14px; font-weight: 600; }
+.mr { font-size: 12px; color: #888; }
+.mt { font-size: 11px; color: #1D9E75; }
+.me { font-size: 11px; color: #aaa; }
+.badge-in  { background: #E1F5EE; color: #085041; font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 600; white-space: nowrap; }
+.badge-out { background: #f0f0ec; color: #888; font-size: 11px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+.act-btn { padding: 6px 12px; font-size: 12px; border: 1px solid #d8d8d4; border-radius: 8px; cursor: pointer; background: none; font-weight: 500; white-space: nowrap; margin-left: 4px; }
+.act-btn.ci   { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
+.act-btn.co   { border-color: #1D9E75; color: #0F6E56; }
+.act-btn.edit { color: #888; }
+.card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1.25rem; }
+.form-lbl { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
+.form-input { font-size: 14px; padding: 9px 12px; border: 1px solid #d8d8d4; border-radius: 8px; background: #fff; color: #1a1a18; width: 100%; margin-bottom: 10px; }
+.form-input:focus { outline: none; border-color: #1D9E75; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.color-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.cc { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; }
+.btn-primary { width: 100%; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn-primary:hover { background: #0F6E56; }
+.log-entry { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #fff; border: 1px solid #e8e8e4; border-radius: 8px; font-size: 13px; margin-bottom: 6px; }
+.log-t { color: #aaa; min-width: 50px; font-variant-numeric: tabular-nums; }
+.log-n { flex: 1; font-weight: 500; }
+.log-ai { color: #085041; }
+.log-ao { color: #888; }
+.empty { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
+.loading { text-align: center; padding: 1.5rem; color: #aaa; font-size: 13px; }
+.err-msg { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: .75rem 1rem; font-size: 13px; margin-bottom: 1rem; display: none; }
+/* モーダル */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:flex-start; justify-content:center; padding-top: 2rem; overflow-y: auto; }
+.modal-overlay.open { display:flex; }
+.modal { background:#fff; border-radius:14px; padding:1.5rem; width:90%; max-width:420px; margin-bottom: 2rem; }
+.modal h2 { font-size:16px; font-weight:600; margin-bottom:1rem; }
+.modal-section { font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .5rem;padding-top:.75rem;border-top:1px solid #f0f0ec; }
+.modal-btns { display:flex; gap:8px; margin-top:1rem; }
+.btn-cancel { flex:1; padding:10px; background:#f0f0ec; border:none; border-radius:8px; font-size:14px; cursor:pointer; }
+.btn-save   { flex:1; padding:10px; background:#1D9E75; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-top:1px solid #f5f5f3; }
+.toggle-lbl { font-size:13px; color:#555; }
+.mtoggle { position:relative; width:36px; height:20px; }
+.mtoggle input { opacity:0; width:0; height:0; }
+.mslider { position:absolute; inset:0; background:#ccc; border-radius:10px; transition:.2s; cursor:pointer; }
+.mslider:before { content:''; position:absolute; width:14px; height:14px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
+input:checked + .mslider { background:#1D9E75; }
+input:checked + .mslider:before { transform:translateX(16px); }
 </style>
 </head>
 <body>
+
+<!-- 編集モーダル -->
 <div class="modal-overlay" id="edit-modal">
   <div class="modal">
     <h2>メンバーを編集</h2>
-    <label class="form-lbl">名前</label>
-    <input id="edit-name" class="form-input" type="text">
-    <label class="form-lbl">職種・役割</label>
-    <input id="edit-role" class="form-input" type="text">
+    <div class="modal-section">基本情報（管理者のみ）</div>
+    <label class="form-lbl">本名</label>
+    <input id="e-realname" class="form-input" type="text">
+    <label class="form-lbl">メールアドレス</label>
+    <input id="e-email" class="form-input" type="email">
+    <label class="form-lbl">学年・役職</label>
+    <select id="e-role" class="form-input">
+      <option value="">選択してください</option>
+      <option>1年</option><option>2年</option><option>3年</option><option>4年</option>
+      <option>修士1年</option><option>修士2年</option><option>博士</option>
+      <option>スタッフ</option><option>その他</option>
+    </select>
+    <div class="modal-section">公開プロフィール</div>
+    <label class="form-lbl">ニックネーム</label>
+    <input id="e-nickname" class="form-input" type="text">
+    <div class="toggle-row">
+      <span class="toggle-lbl">ニックネームを公開する</span>
+      <label class="mtoggle"><input type="checkbox" id="et-nickname"><span class="mslider"></span></label>
+    </div>
+    <div class="toggle-row">
+      <span class="toggle-lbl">学年・役職を公開する</span>
+      <label class="mtoggle"><input type="checkbox" id="et-role"><span class="mslider"></span></label>
+    </div>
+    <div class="modal-section">興味・SNS</div>
+    <label class="form-lbl">興味・得意分野</label>
+    <input id="e-interests" class="form-input" type="text">
+    <div class="toggle-row">
+      <span class="toggle-lbl">興味・得意分野を公開する</span>
+      <label class="mtoggle"><input type="checkbox" id="et-interests"><span class="mslider"></span></label>
+    </div>
+    <label class="form-lbl" style="margin-top:.75rem">Facebook URL</label>
+    <input id="e-facebook" class="form-input" type="url">
+    <div class="toggle-row">
+      <span class="toggle-lbl">Facebookを公開する</span>
+      <label class="mtoggle"><input type="checkbox" id="et-facebook"><span class="mslider"></span></label>
+    </div>
+    <label class="form-lbl" style="margin-top:.75rem">LinkedIn URL</label>
+    <input id="e-linkedin" class="form-input" type="url">
+    <div class="toggle-row">
+      <span class="toggle-lbl">LinkedInを公開する</span>
+      <label class="mtoggle"><input type="checkbox" id="et-linkedin"><span class="mslider"></span></label>
+    </div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeEdit()">キャンセル</button>
-      <button class="btn-save" onclick="saveEdit()">保存する</button>
+      <button class="btn-save"   onclick="saveEdit()">保存する</button>
     </div>
   </div>
 </div>
+
 <div class="page">
   <h1><span class="live"></span>管理画面</h1>
   <p class="sub" id="today-date"></p>
-
-  <div id="config-notice">
-    <strong>⚙️ 設定が必要です</strong><br>
-    このファイルの先頭にある <code>SUPABASE_URL</code> と <code>SUPABASE_ANON_KEY</code> を書き換えてください。<br>
-    設定済みの場合はこの枠を無視してください。
-  </div>
-
-  <div class="error-msg" id="err-msg"></div>
-
+  <div class="err-msg" id="err-msg"></div>
   <div class="stats">
     <div class="stat"><div class="stat-num" id="s-in">—</div><div class="stat-lbl">現在在室中</div></div>
     <div class="stat"><div class="stat-num" id="s-today">—</div><div class="stat-lbl">本日の来訪</div></div>
     <div class="stat"><div class="stat-num" id="s-total">—</div><div class="stat-lbl">登録メンバー</div></div>
   </div>
-
   <div class="pub-row">
-    <div>
-      <div class="pub-lbl">公開ページ</div>
-      <div class="pub-sub" id="pub-sub">外部向け在室状況ページ</div>
-    </div>
-    <label class="toggle">
-      <input type="checkbox" id="pub-toggle" onchange="setPublic(this.checked)">
-      <span class="slider"></span>
-    </label>
+    <div><div class="pub-lbl">公開ページ</div><div class="pub-sub" id="pub-sub">外部向け在室状況ページ</div></div>
+    <label class="toggle"><input type="checkbox" id="pub-toggle" onchange="setPublic(this.checked)"><span class="slider"></span></label>
   </div>
-
   <div class="tabs">
     <button class="tab active" onclick="showTab('members')">メンバー</button>
     <button class="tab" onclick="showTab('add')">新規登録</button>
     <button class="tab" onclick="showTab('log')">入退館ログ</button>
   </div>
-
   <div id="tab-members"><div class="loading" id="members-loading">読み込み中…</div><div id="member-list"></div></div>
   <div id="tab-add" style="display:none">
     <div class="card">
+      <p style="font-size:15px;font-weight:600;margin-bottom:1rem">新規メンバー登録</p>
       <div class="grid2">
-        <div><label class="form-lbl">名前</label><input id="f-name" class="form-input" type="text" placeholder="山田 太郎"></div>
-        <div><label class="form-lbl">職種・役割</label><input id="f-role" class="form-input" type="text" placeholder="エンジニア"></div>
+        <div><label class="form-lbl">本名</label><input id="f-name" class="form-input" type="text" placeholder="山田 太郎"></div>
+        <div><label class="form-lbl">学年・役職</label>
+          <select id="f-role" class="form-input">
+            <option value="">選択</option>
+            <option>1年</option><option>2年</option><option>3年</option><option>4年</option>
+            <option>修士1年</option><option>修士2年</option><option>博士</option>
+            <option>スタッフ</option><option>その他</option>
+          </select>
+        </div>
       </div>
+      <label class="form-lbl">メールアドレス</label>
+      <input id="f-email" class="form-input" type="email" placeholder="taro@example.com">
+      <label class="form-lbl">ニックネーム</label>
+      <input id="f-nickname" class="form-input" type="text" placeholder="タロウ">
       <label class="form-lbl">アバターカラー</label>
       <div class="color-row" id="color-pick">
         <div class="cc" data-c="teal"   style="background:#5DCAA5;border-color:#0F6E56" onclick="pickColor(this)"></div>
@@ -155,21 +181,16 @@
         <div class="cc" data-c="purple" style="background:#AFA9EC" onclick="pickColor(this)"></div>
         <div class="cc" data-c="coral"  style="background:#F0997B" onclick="pickColor(this)"></div>
       </div>
-      <div class="error-msg" id="add-err"></div>
+      <div class="err-msg" id="add-err"></div>
       <button class="btn-primary" onclick="addMember()">登録する</button>
     </div>
   </div>
-  <div id="tab-log" style="display:none"><div class="loading">読み込み中…</div><div id="log-list"></div></div>
+  <div id="tab-log" style="display:none"><div id="log-list"></div></div>
 </div>
 
 <script>
-// ============================================================
-//  ★ ここを書き換えてください（Supabase の設定）
-// ============================================================
-const SUPABASE_URL      = 'https://qreaidasfzqiswowgsbo.supabase.co';  // ← あなたのURL
-const SUPABASE_ANON_KEY = 'sb_publishable_Fm-cnmeEKtXwBAZmbU89cQ_ZoA7bEI4'; // ← あなたのanon key
-// ============================================================
-
+const SUPABASE_URL      = 'https://qreaidasfzqiswowgsbo.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_Fm-cnmeEKtXwBAZmbU89cQ_ZoA7bEI4';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -182,8 +203,10 @@ const colorMap = {
   coral:  { bg: '#FAECE7', text: '#711B0C' },
 };
 let selColor = 'teal';
+let editingId = null;
 
 function initials(name) {
+  if (!name) return '?';
   const p = name.trim().split(/\s+/);
   return p.length >= 2 ? p[0][0] + p[1][0] : name.slice(0, 2);
 }
@@ -195,65 +218,78 @@ function fmtTime(iso) {
 function showError(id, msg) {
   const el = document.getElementById(id);
   if (!el) return;
-  el.style.display = 'block';
-  el.textContent = msg;
+  el.style.display = 'block'; el.textContent = msg;
 }
 
 async function loadMembers() {
   document.getElementById('members-loading').style.display = 'block';
   const { data, error } = await db.from('members').select('*').order('name');
   document.getElementById('members-loading').style.display = 'none';
-  if (error) { showError('err-msg', 'メンバー取得エラー: ' + error.message); return; }
-  window._membersCache = data;
-  renderMembers(data);
-  updateStats(data);
+  if (error) { showError('err-msg', 'エラー: ' + error.message); return; }
+  window._membersCache = data || [];
+  renderMembers(data || []);
+  const inC = (data||[]).filter(m => m.is_checked_in).length;
+  document.getElementById('s-in').textContent    = inC;
+  document.getElementById('s-today').textContent = (data||[]).filter(m => m.visited_today).length;
+  document.getElementById('s-total').textContent = (data||[]).length;
 }
 
 function renderMembers(members) {
   const el = document.getElementById('member-list');
-  const inM = members.filter(m => m.is_checked_in);
+  const inM  = members.filter(m => m.is_checked_in);
   const outM = members.filter(m => !m.is_checked_in);
   let html = '';
-  if (inM.length) {
-    html += '<div class="sec-lbl">在室中 (' + inM.length + ')</div>';
-    inM.forEach(m => { html += memberCard(m); });
-  }
-  if (outM.length) {
-    html += '<div class="sec-lbl">退室中</div>';
-    outM.forEach(m => { html += memberCard(m); });
-  }
+  if (inM.length)  { html += '<div class="sec-lbl">在室中 (' + inM.length + ')</div>'; inM.forEach(m => { html += memberCard(m); }); }
+  if (outM.length) { html += '<div class="sec-lbl">退室中</div>';                        outM.forEach(m => { html += memberCard(m); }); }
   if (!members.length) html = '<div class="empty">登録メンバーがいません</div>';
   el.innerHTML = html;
 }
 
 function memberCard(m) {
-  const c = colorMap[m.color] || colorMap.teal;
-  const badge = m.is_checked_in
-    ? '<span class="badge-in">在室</span>'
-    : '<span class="badge-out">退室</span>';
-  const timeStr = m.is_checked_in && m.checked_in_at
-    ? '<div class="mt">' + fmtTime(m.checked_in_at) + ' より</div>' : '';
+  const c   = colorMap[m.color] || colorMap.teal;
+  const dn  = (m.show_nickname && m.nickname) ? m.nickname : m.name;
+  const realStr = (m.real_name && m.real_name !== m.name) ? m.real_name : '';
+  const badge   = m.is_checked_in ? '<span class="badge-in">在室</span>' : '<span class="badge-out">退室</span>';
+  const timeStr = m.is_checked_in && m.checked_in_at ? '<div class="mt">' + fmtTime(m.checked_in_at) + ' より</div>' : '';
+  const emailStr = m.email ? '<div class="me">' + m.email + '</div>' : '';
   const btn = m.is_checked_in
-    ? '<button class="act-btn co" onclick="toggleMember(\'' + m.id + '\', false)">退館</button>'
-    : '<button class="act-btn ci" onclick="toggleMember(\'' + m.id + '\', true)">入館</button>';
+    ? '<button class="act-btn co"   onclick="toggleMember(\'' + m.id + '\', false)">退館</button>'
+    : '<button class="act-btn ci"   onclick="toggleMember(\'' + m.id + '\', true)">入館</button>';
   const editBtn = '<button class="act-btn edit" onclick="openEdit(\'' + m.id + '\')">編集</button>';
   return '<div class="mc' + (m.is_checked_in ? ' in' : '') + '">'
-    + '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(m.name) + '</div>'
-    + '<div class="mi"><div class="mn">' + m.name + '</div><div class="mr">' + m.role + '</div>' + timeStr + '</div>'
+    + '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(dn) + '</div>'
+    + '<div class="mi"><div class="mn">' + dn + (realStr ? ' <span style="font-size:11px;color:#aaa;font-weight:400">(' + realStr + ')</span>' : '') + '</div>'
+    + '<div class="mr">' + (m.role||'') + '</div>'
+    + emailStr + timeStr + '</div>'
     + badge + editBtn + btn + '</div>';
 }
 
-let editingId = null;
-let editingMembers = [];
+async function toggleMember(id, isIn) {
+  const now = new Date().toISOString();
+  const updates = isIn ? { is_checked_in: true, checked_in_at: now, visited_today: true } : { is_checked_in: false, checked_in_at: null };
+  await db.from('members').update(updates).eq('id', id);
+  const { data: md } = await db.from('members').select('name').eq('id', id).single();
+  if (md) await db.from('checkin_logs').insert({ member_id: id, member_name: md.name, action: isIn ? 'in' : 'out' });
+  await loadMembers();
+}
 
 function openEdit(id) {
-  const { data } = window._membersCache || {};
-  const allMembers = window._membersCache || [];
-  const m = allMembers.find(x => x.id === id);
+  const members = window._membersCache || [];
+  const m = members.find(x => x.id === id);
   if (!m) return;
   editingId = id;
-  document.getElementById('edit-name').value = m.name;
-  document.getElementById('edit-role').value = m.role;
+  document.getElementById('e-realname').value   = m.real_name || m.name || '';
+  document.getElementById('e-email').value      = m.email || '';
+  document.getElementById('e-role').value       = m.role || '';
+  document.getElementById('e-nickname').value   = m.nickname || '';
+  document.getElementById('et-nickname').checked = m.show_nickname !== false;
+  document.getElementById('et-role').checked    = m.show_role !== false;
+  document.getElementById('e-interests').value  = m.interests || '';
+  document.getElementById('et-interests').checked = !!m.show_interests;
+  document.getElementById('e-facebook').value   = m.facebook_url || '';
+  document.getElementById('et-facebook').checked = !!m.show_facebook;
+  document.getElementById('e-linkedin').value   = m.linkedin_url || '';
+  document.getElementById('et-linkedin').checked = !!m.show_linkedin;
   document.getElementById('edit-modal').classList.add('open');
 }
 
@@ -263,64 +299,56 @@ function closeEdit() {
 }
 
 async function saveEdit() {
-  const name = document.getElementById('edit-name').value.trim();
-  const role = document.getElementById('edit-role').value.trim();
-  if (!name || !editingId) return;
-  await db.from('members').update({ name, role }).eq('id', editingId);
+  if (!editingId) return;
+  const realName = document.getElementById('e-realname').value.trim();
+  const nickname = document.getElementById('e-nickname').value.trim();
+  await db.from('members').update({
+    name:           realName || document.getElementById('e-realname').value,
+    real_name:      realName,
+    email:          document.getElementById('e-email').value.trim() || null,
+    role:           document.getElementById('e-role').value || null,
+    nickname:       nickname || null,
+    show_nickname:  document.getElementById('et-nickname').checked,
+    show_role:      document.getElementById('et-role').checked,
+    interests:      document.getElementById('e-interests').value.trim() || null,
+    show_interests: document.getElementById('et-interests').checked,
+    facebook_url:   document.getElementById('e-facebook').value.trim() || null,
+    show_facebook:  document.getElementById('et-facebook').checked,
+    linkedin_url:   document.getElementById('e-linkedin').value.trim() || null,
+    show_linkedin:  document.getElementById('et-linkedin').checked,
+  }).eq('id', editingId);
   closeEdit();
-  await loadMembers();
-}
-
-function updateStats(members) {
-  document.getElementById('s-in').textContent    = members.filter(m => m.is_checked_in).length;
-  document.getElementById('s-today').textContent = members.filter(m => m.visited_today).length;
-  document.getElementById('s-total').textContent = members.length;
-}
-
-async function toggleMember(id, checkinAction) {
-  const now = new Date().toISOString();
-  const updates = checkinAction
-    ? { is_checked_in: true,  checked_in_at: now, visited_today: true }
-    : { is_checked_in: false, checked_in_at: null };
-  const { error: updateErr } = await db.from('members').update(updates).eq('id', id);
-  if (updateErr) { showError('err-msg', '更新エラー: ' + updateErr.message); return; }
-
-  const { data: memberData } = await db.from('members').select('name').eq('id', id).single();
-  if (memberData) {
-    await db.from('checkin_logs').insert({
-      member_id: id,
-      member_name: memberData.name,
-      action: checkinAction ? 'in' : 'out',
-    });
-  }
   await loadMembers();
 }
 
 async function addMember() {
   const name = document.getElementById('f-name').value.trim();
-  const role = document.getElementById('f-role').value.trim() || 'メンバー';
-  if (!name) { showError('add-err', '名前を入力してください'); return; }
-  const { error } = await db.from('members').insert({ name, role, color: selColor });
+  if (!name) { showError('add-err', '本名を入力してください'); return; }
+  const { error } = await db.from('members').insert({
+    name, real_name: name,
+    role:     document.getElementById('f-role').value || 'メンバー',
+    email:    document.getElementById('f-email').value.trim() || null,
+    nickname: document.getElementById('f-nickname').value.trim() || null,
+    color:    selColor,
+  });
   if (error) { showError('add-err', '登録エラー: ' + error.message); return; }
   document.getElementById('f-name').value = '';
   document.getElementById('f-role').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-nickname').value = '';
   document.getElementById('add-err').style.display = 'none';
   await loadMembers();
   showTab('members');
 }
 
 async function loadLog() {
-  const { data, error } = await db.from('checkin_logs')
-    .select('*').order('created_at', { ascending: false }).limit(50);
-  if (error) return;
+  const { data } = await db.from('checkin_logs').select('*').order('created_at', { ascending: false }).limit(50);
   const el = document.getElementById('log-list');
-  if (!data.length) { el.innerHTML = '<div class="empty">ログがありません</div>'; return; }
+  if (!data || !data.length) { el.innerHTML = '<div class="empty">ログがありません</div>'; return; }
   el.innerHTML = data.map(l =>
-    '<div class="log-entry">'
-    + '<span class="log-t">' + fmtTime(l.created_at) + '</span>'
+    '<div class="log-entry"><span class="log-t">' + fmtTime(l.created_at) + '</span>'
     + '<span class="log-n">' + l.member_name + '</span>'
-    + '<span class="' + (l.action === 'in' ? 'log-ai' : 'log-ao') + '">'
-    + (l.action === 'in' ? '入館' : '退館') + '</span></div>'
+    + '<span class="' + (l.action==='in'?'log-ai':'log-ao') + '">' + (l.action==='in'?'入館':'退館') + '</span></div>'
   ).join('');
 }
 
@@ -341,12 +369,8 @@ async function setPublic(val) {
 }
 
 function showTab(t) {
-  ['members','add','log'].forEach(x => {
-    document.getElementById('tab-' + x).style.display = x === t ? 'block' : 'none';
-  });
-  document.querySelectorAll('.tab').forEach((b, i) => {
-    b.classList.toggle('active', ['members','add','log'][i] === t);
-  });
+  ['members','add','log'].forEach(x => { document.getElementById('tab-'+x).style.display = x===t?'block':'none'; });
+  document.querySelectorAll('.tab').forEach((b,i) => { b.classList.toggle('active', ['members','add','log'][i]===t); });
   if (t === 'log') loadLog();
 }
 
@@ -356,24 +380,15 @@ function pickColor(el) {
   selColor = el.dataset.c;
 }
 
-// リアルタイム：メンバーが変更されたら自動で再読込
-db.channel('members-changes')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => { loadMembers(); })
+db.channel('admin-realtime')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'members' }, () => loadMembers())
   .subscribe();
 
-// 初期化
 (async () => {
   const d = new Date();
   const days = ['日','月','火','水','木','金','土'];
   document.getElementById('today-date').textContent =
     d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日（' + days[d.getDay()] + '）';
-
-  // URLが未設定ならエラー表示
-  if (SUPABASE_URL.includes('xxxxxxxxxxx')) {
-    showError('err-msg', '⚠️ SUPABASE_URL と SUPABASE_ANON_KEY を設定してください（このファイルの <script> 内）');
-    return;
-  }
-  document.getElementById('config-notice').style.display = 'none';
   await loadSettings();
   await loadMembers();
 })();
