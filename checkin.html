@@ -12,31 +12,25 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 .logo { text-align: center; margin-bottom: 2rem; }
 .logo-title { font-size: 20px; font-weight: 700; }
 .logo-sub { font-size: 13px; color: #888; margin-top: 4px; }
-
-/* --- 画面切り替え --- */
 .screen { display: none; }
 .screen.active { display: block; }
-
-/* --- 学生一覧 --- */
 .search-box { width: 100%; padding: 12px 14px; font-size: 15px; border: 1px solid #d8d8d4; border-radius: 10px; background: #fff; margin-bottom: 1rem; }
 .search-box:focus { outline: none; border-color: #1D9E75; }
-.student-list { display: flex; flex-direction: column; gap: 8px; }
-.student-row { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: .875rem 1rem; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color .15s; }
-.student-row:hover { border-color: #1D9E75; }
-.student-row.in { border-left: 3px solid #1D9E75; }
+.member-list { display: flex; flex-direction: column; gap: 8px; }
+.member-row { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: .875rem 1rem; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color .15s; }
+.member-row:hover { border-color: #1D9E75; }
+.member-row.in { border-left: 3px solid #1D9E75; }
 .av { width: 40px; height: 40px; border-radius: 50%; background: #E1F5EE; color: #085041; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
-.sname { font-size: 15px; font-weight: 600; }
-.sgrade { font-size: 12px; color: #888; }
+.mname { font-size: 15px; font-weight: 600; }
+.mrole { font-size: 12px; color: #888; }
 .badge-in  { margin-left: auto; background: #E1F5EE; color: #085041; font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 600; white-space: nowrap; }
 .badge-out { margin-left: auto; background: #f0f0ec; color: #aaa; font-size: 11px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
 .new-btn { width: 100%; padding: 14px; background: #fff; border: 2px dashed #d8d8d4; border-radius: 12px; font-size: 14px; color: #888; cursor: pointer; margin-top: 12px; }
 .new-btn:hover { border-color: #1D9E75; color: #1D9E75; }
-
-/* --- チェックイン画面 --- */
 .checkin-card { background: #fff; border-radius: 16px; border: 1px solid #e8e8e4; padding: 2rem; text-align: center; }
 .ci-av { width: 72px; height: 72px; border-radius: 50%; background: #E1F5EE; color: #085041; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; margin: 0 auto 1rem; }
 .ci-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-.ci-grade { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+.ci-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
 .ci-status { font-size: 14px; color: #888; margin-bottom: 1.5rem; padding: 10px; background: #f5f5f3; border-radius: 8px; }
 .ci-status.in { color: #085041; background: #E1F5EE; }
 .btn-checkin  { width: 100%; padding: 16px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 17px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
@@ -46,12 +40,10 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 .done-msg { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
 .done-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
 .btn-return { width: 100%; padding: 14px; background: #f0f0ec; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
-
-/* --- 登録フォーム --- */
 .form-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
 .form-sub { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
 .card { background: #fff; border-radius: 14px; border: 1px solid #e8e8e4; padding: 1.25rem; margin-bottom: 1rem; }
-.card-title { font-size: 13px; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1rem; }
+.card-title { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 1rem; }
 .field { margin-bottom: 1rem; }
 .field:last-child { margin-bottom: 0; }
 .flabel { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
@@ -71,30 +63,27 @@ input:checked + .tslider:before { transform: translateX(18px); }
 .err { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: .75rem 1rem; font-size: 13px; margin-bottom: 1rem; display: none; }
 .loading { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
 .empty { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
+.sec-lbl { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin: .75rem 0 .4rem; }
 </style>
 </head>
 <body>
 <div class="page">
   <div class="logo">
     <div class="logo-title">コワーキングスペース</div>
-    <div class="logo-sub">入退館システム</div>
+    <div class="logo-sub">入退館</div>
   </div>
 
-  <!-- 画面1: 学生一覧 -->
   <div class="screen active" id="screen-list">
-    <input class="search-box" type="text" placeholder="名前で検索..." id="search-input" oninput="filterList()">
-    <div class="student-list" id="student-list">
-      <div class="loading">読み込み中…</div>
-    </div>
+    <input class="search-box" type="text" placeholder="名前・ニックネームで検索..." id="search-input" oninput="filterList()">
+    <div class="member-list" id="member-list"><div class="loading">読み込み中…</div></div>
     <button class="new-btn" onclick="showRegister()">＋ 初めての方はこちらで登録</button>
   </div>
 
-  <!-- 画面2: チェックイン/アウト -->
   <div class="screen" id="screen-checkin">
     <div class="checkin-card">
       <div class="ci-av" id="ci-av"></div>
       <div class="ci-name" id="ci-name"></div>
-      <div class="ci-grade" id="ci-grade"></div>
+      <div class="ci-sub"  id="ci-sub"></div>
       <div class="ci-status" id="ci-status"></div>
       <button class="btn-checkin"  id="btn-in"  onclick="doCheckin(true)"  style="display:none">入館する</button>
       <button class="btn-checkout" id="btn-out" onclick="doCheckin(false)" style="display:none">退館する</button>
@@ -102,46 +91,43 @@ input:checked + .tslider:before { transform: translateX(18px); }
     </div>
   </div>
 
-  <!-- 画面3: 完了 -->
   <div class="screen" id="screen-done">
     <div class="checkin-card">
       <div class="done-icon" id="done-icon"></div>
-      <div class="done-msg" id="done-msg"></div>
-      <div class="done-sub" id="done-sub"></div>
+      <div class="done-msg"  id="done-msg"></div>
+      <div class="done-sub"  id="done-sub"></div>
       <button class="btn-return" onclick="showList()">一覧に戻る</button>
     </div>
   </div>
 
-  <!-- 画面4: 新規登録 -->
   <div class="screen" id="screen-register">
     <div class="form-title">新規登録</div>
     <div class="form-sub">登録後、QRを読み込むだけで入退館できます</div>
     <div class="err" id="reg-err"></div>
-
     <div class="card">
-      <div class="card-title">基本情報</div>
+      <div class="card-title">基本情報（管理者のみ表示）</div>
       <div class="field">
-        <label class="flabel">本名 <span>※管理者のみ表示</span></label>
+        <label class="flabel">本名</label>
         <input id="r-realname" class="finput" type="text" placeholder="山田 太郎">
       </div>
       <div class="field">
-        <label class="flabel">メールアドレス <span>※管理者のみ表示</span></label>
+        <label class="flabel">メールアドレス <span>任意</span></label>
         <input id="r-email" class="finput" type="email" placeholder="taro@example.com">
       </div>
       <div class="field">
-        <label class="flabel">学年</label>
-        <select id="r-grade" class="finput">
+        <label class="flabel">学年・役職 <span>任意</span></label>
+        <select id="r-role" class="finput">
           <option value="">選択してください</option>
           <option>1年</option><option>2年</option><option>3年</option><option>4年</option>
-          <option>修士1年</option><option>修士2年</option><option>博士</option><option>その他</option>
+          <option>修士1年</option><option>修士2年</option><option>博士</option>
+          <option>スタッフ</option><option>その他</option>
         </select>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-title">公開プロフィール <span style="font-size:11px;color:#aaa;text-transform:none;letter-spacing:0">— 在室ページに表示（任意）</span></div>
+      <div class="card-title">公開プロフィール（在室ページに表示）</div>
       <div class="field">
-        <label class="flabel">ニックネーム</label>
+        <label class="flabel">ニックネーム <span>任意</span></label>
         <input id="r-nickname" class="finput" type="text" placeholder="タロウ">
       </div>
       <div class="toggle-row">
@@ -149,19 +135,18 @@ input:checked + .tslider:before { transform: translateX(18px); }
         <label class="toggle"><input type="checkbox" id="t-nickname" checked><span class="tslider"></span></label>
       </div>
       <div class="toggle-row">
-        <span class="toggle-lbl">学年を公開する</span>
-        <label class="toggle"><input type="checkbox" id="t-grade"><span class="tslider"></span></label>
+        <span class="toggle-lbl">学年・役職を公開する</span>
+        <label class="toggle"><input type="checkbox" id="t-role"><span class="tslider"></span></label>
       </div>
     </div>
-
     <div class="card">
-      <div class="card-title">興味・SNS <span style="font-size:11px;color:#aaa;text-transform:none;letter-spacing:0">— すべて任意</span></div>
+      <div class="card-title">興味・SNS（すべて任意）</div>
       <div class="field">
-        <label class="flabel">興味のある分野</label>
+        <label class="flabel">興味のある分野・得意なこと</label>
         <input id="r-interests" class="finput" type="text" placeholder="AI、デザイン、起業など">
       </div>
       <div class="toggle-row">
-        <span class="toggle-lbl">興味・分野を公開する</span>
+        <span class="toggle-lbl">興味・得意分野を公開する</span>
         <label class="toggle"><input type="checkbox" id="t-interests"><span class="tslider"></span></label>
       </div>
       <div class="field" style="margin-top:.75rem">
@@ -181,23 +166,19 @@ input:checked + .tslider:before { transform: translateX(18px); }
         <label class="toggle"><input type="checkbox" id="t-linkedin"><span class="tslider"></span></label>
       </div>
     </div>
-
-    <button class="btn-register" onclick="registerStudent()">登録する</button>
+    <button class="btn-register" onclick="registerMember()">登録する</button>
     <button class="btn-back" onclick="showList()" style="width:100%;margin-top:8px">← 戻る</button>
   </div>
 </div>
 
 <script>
-// ============================================================
 const SUPABASE_URL      = 'https://qreaidasfzqiswowgsbo.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Fm-cnmeEKtXwBAZmbU89cQ_ZoA7bEI4';
-// ============================================================
-
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let allStudents = [];
-let currentStudent = null;
+let allMembers = [];
+let currentMember = null;
 
 function initials(name) {
   if (!name) return '?';
@@ -209,64 +190,70 @@ function fmtTime(iso) {
   const d = new Date(iso);
   return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
+function getDisplayName(m) {
+  if (m.show_nickname && m.nickname) return m.nickname;
+  return m.name;
+}
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
 }
-function showList()     { loadStudents(); showScreen('screen-list'); }
+function showList()     { loadMembers(); showScreen('screen-list'); }
 function showRegister() { showScreen('screen-register'); }
 
-async function loadStudents() {
-  const { data, error } = await db.from('students').select('*').order('nickname');
+async function loadMembers() {
+  const { data, error } = await db.from('members').select('*').order('name');
   if (error) return;
-  allStudents = data || [];
-  renderList(allStudents);
+  allMembers = data || [];
+  renderList(allMembers);
 }
 
-function renderList(students) {
-  const el = document.getElementById('student-list');
-  if (!students.length) {
-    el.innerHTML = '<div class="empty">登録された学生がいません</div>';
-    return;
-  }
-  const inS  = students.filter(s => s.is_checked_in);
-  const outS = students.filter(s => !s.is_checked_in);
-  const html = [...inS, ...outS].map(s => {
-    const displayName = s.show_nickname && s.nickname ? s.nickname : (s.show_nickname ? s.real_name : '匿名');
-    const gradeStr = s.show_grade && s.grade ? s.grade : '';
-    return '<div class="student-row' + (s.is_checked_in ? ' in' : '') + '" onclick="selectStudent(\'' + s.id + '\')">'
-      + '<div class="av">' + initials(displayName) + '</div>'
-      + '<div><div class="sname">' + displayName + '</div>' + (gradeStr ? '<div class="sgrade">' + gradeStr + '</div>' : '') + '</div>'
-      + (s.is_checked_in ? '<span class="badge-in">在室</span>' : '<span class="badge-out">退室</span>')
-      + '</div>';
-  }).join('');
+function renderList(members) {
+  const el = document.getElementById('member-list');
+  if (!members.length) { el.innerHTML = '<div class="empty">登録されたメンバーがいません</div>'; return; }
+  const inM  = members.filter(m => m.is_checked_in);
+  const outM = members.filter(m => !m.is_checked_in);
+  let html = '';
+  if (inM.length)  html += '<div class="sec-lbl">在室中 (' + inM.length + ')</div>';
+  inM.forEach(m => { html += memberRow(m); });
+  if (outM.length) html += '<div class="sec-lbl">退室中</div>';
+  outM.forEach(m => { html += memberRow(m); });
   el.innerHTML = html;
+}
+
+function memberRow(m) {
+  const dn  = getDisplayName(m);
+  const sub = (m.show_role && m.role) ? m.role : '';
+  return '<div class="member-row' + (m.is_checked_in ? ' in' : '') + '" onclick="selectMember(\'' + m.id + '\')">'
+    + '<div class="av">' + initials(dn) + '</div>'
+    + '<div><div class="mname">' + dn + '</div>' + (sub ? '<div class="mrole">' + sub + '</div>' : '') + '</div>'
+    + (m.is_checked_in ? '<span class="badge-in">在室</span>' : '<span class="badge-out">退室</span>')
+    + '</div>';
 }
 
 function filterList() {
   const q = document.getElementById('search-input').value.trim().toLowerCase();
-  if (!q) { renderList(allStudents); return; }
-  const filtered = allStudents.filter(s => {
-    const name = (s.nickname || s.real_name || '').toLowerCase();
-    return name.includes(q);
-  });
-  renderList(filtered);
+  if (!q) { renderList(allMembers); return; }
+  renderList(allMembers.filter(m => {
+    const dn = (m.nickname || m.name || '').toLowerCase();
+    return dn.includes(q);
+  }));
 }
 
-function selectStudent(id) {
-  const s = allStudents.find(x => x.id === id);
-  if (!s) return;
-  currentStudent = s;
-  const displayName = s.show_nickname && s.nickname ? s.nickname : s.real_name;
-  document.getElementById('ci-av').textContent    = initials(displayName);
-  document.getElementById('ci-name').textContent  = displayName;
-  document.getElementById('ci-grade').textContent = s.show_grade && s.grade ? s.grade : '';
+function selectMember(id) {
+  const m = allMembers.find(x => x.id === id);
+  if (!m) return;
+  currentMember = m;
+  const dn = getDisplayName(m);
+  document.getElementById('ci-av').textContent   = initials(dn);
+  document.getElementById('ci-name').textContent = dn;
+  document.getElementById('ci-sub').textContent  = (m.show_role && m.role) ? m.role : '';
   const statusEl = document.getElementById('ci-status');
   const btnIn    = document.getElementById('btn-in');
   const btnOut   = document.getElementById('btn-out');
-  if (s.is_checked_in) {
-    statusEl.textContent = '現在在室中 — ' + fmtTime(s.checked_in_at) + ' より';
+  if (m.is_checked_in) {
+    statusEl.textContent = '現在在室中 — ' + fmtTime(m.checked_in_at) + ' より';
     statusEl.className   = 'ci-status in';
     btnIn.style.display  = 'none';
     btnOut.style.display = 'block';
@@ -280,54 +267,51 @@ function selectStudent(id) {
 }
 
 async function doCheckin(isIn) {
-  if (!currentStudent) return;
+  if (!currentMember) return;
   const now = new Date().toISOString();
   const updates = isIn
-    ? { is_checked_in: true,  checked_in_at: now, visited_today: true }
+    ? { is_checked_in: true, checked_in_at: now, visited_today: true }
     : { is_checked_in: false, checked_in_at: null };
-  await db.from('students').update(updates).eq('id', currentStudent.id);
-  await db.from('student_logs').insert({
-    student_id:  currentStudent.id,
-    real_name:   currentStudent.real_name,
-    nickname:    currentStudent.nickname,
-    action:      isIn ? 'in' : 'out',
+  await db.from('members').update(updates).eq('id', currentMember.id);
+  await db.from('checkin_logs').insert({
+    member_id: currentMember.id, member_name: currentMember.name, action: isIn ? 'in' : 'out',
   });
-  const displayName = currentStudent.show_nickname && currentStudent.nickname
-    ? currentStudent.nickname : currentStudent.real_name;
+  const dn = getDisplayName(currentMember);
   document.getElementById('done-icon').textContent = isIn ? '✅' : '👋';
   document.getElementById('done-msg').textContent  = isIn ? '入館しました！' : '退館しました！';
-  document.getElementById('done-sub').textContent  = displayName + 'さん、' + (isIn ? 'いってらっしゃい！' : 'お疲れ様でした！');
+  document.getElementById('done-sub').textContent  = dn + 'さん、' + (isIn ? 'ようこそ！' : 'お疲れ様でした！');
   showScreen('screen-done');
-  setTimeout(() => { showList(); }, 3000);
+  setTimeout(() => showList(), 3000);
 }
 
-async function registerStudent() {
+async function registerMember() {
   const realName = document.getElementById('r-realname').value.trim();
-  const email    = document.getElementById('r-email').value.trim();
-  const grade    = document.getElementById('r-grade').value;
-  const nickname = document.getElementById('r-nickname').value.trim();
   const errEl    = document.getElementById('reg-err');
   errEl.style.display = 'none';
   if (!realName) { errEl.style.display = 'block'; errEl.textContent = '本名を入力してください'; return; }
-  const { error } = await db.from('students').insert({
-    real_name:       realName,
-    email:           email || null,
-    grade:           grade || null,
-    nickname:        nickname || null,
-    show_nickname:   document.getElementById('t-nickname').checked,
-    show_grade:      document.getElementById('t-grade').checked,
-    interests:       document.getElementById('r-interests').value.trim() || null,
-    show_interests:  document.getElementById('t-interests').checked,
-    facebook_url:    document.getElementById('r-facebook').value.trim() || null,
-    show_facebook:   document.getElementById('t-facebook').checked,
-    linkedin_url:    document.getElementById('r-linkedin').value.trim() || null,
-    show_linkedin:   document.getElementById('t-linkedin').checked,
+  const nickname = document.getElementById('r-nickname').value.trim();
+  const role     = document.getElementById('r-role').value || 'メンバー';
+  const colors   = ['teal','blue','pink','amber','purple','coral'];
+  const { error } = await db.from('members').insert({
+    name: realName, real_name: realName,
+    email:          document.getElementById('r-email').value.trim() || null,
+    role,
+    nickname:       nickname || null,
+    show_nickname:  document.getElementById('t-nickname').checked,
+    show_role:      document.getElementById('t-role').checked,
+    interests:      document.getElementById('r-interests').value.trim() || null,
+    show_interests: document.getElementById('t-interests').checked,
+    facebook_url:   document.getElementById('r-facebook').value.trim() || null,
+    show_facebook:  document.getElementById('t-facebook').checked,
+    linkedin_url:   document.getElementById('r-linkedin').value.trim() || null,
+    show_linkedin:  document.getElementById('t-linkedin').checked,
+    color:          colors[Math.floor(Math.random() * colors.length)],
   });
   if (error) { errEl.style.display = 'block'; errEl.textContent = '登録エラー: ' + error.message; return; }
   showList();
 }
 
-loadStudents();
+loadMembers();
 </script>
 </body>
 </html>
