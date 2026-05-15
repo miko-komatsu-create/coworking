@@ -20,19 +20,20 @@ h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
 .pub-row { display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #e8e8e4; border-radius: 10px; padding: .875rem 1rem; margin-bottom: 1.25rem; }
 .pub-lbl { font-size: 14px; font-weight: 500; }
 .pub-sub { font-size: 12px; color: #888; margin-top: 2px; }
-.toggle { position: relative; width: 44px; height: 24px; }
-.toggle input { opacity: 0; width: 0; height: 0; }
-.slider { position: absolute; inset: 0; background: #ccc; border-radius: 12px; transition: .2s; cursor: pointer; }
-.slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
-input:checked + .slider { background: #1D9E75; }
-input:checked + .slider:before { transform: translateX(20px); }
+.ptoggle { position: relative; width: 44px; height: 24px; }
+.ptoggle input { opacity: 0; width: 0; height: 0; }
+.pslider { position: absolute; inset: 0; background: #ccc; border-radius: 12px; transition: .2s; cursor: pointer; }
+.pslider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+input:checked + .pslider { background: #1D9E75; }
+input:checked + .pslider:before { transform: translateX(20px); }
 .tabs { display: flex; gap: 4px; border-bottom: 1px solid #e8e8e4; margin-bottom: 1rem; }
 .tab { padding: 8px 16px; font-size: 13px; cursor: pointer; border: none; background: none; color: #888; border-bottom: 2px solid transparent; margin-bottom: -1px; }
 .tab.active { color: #0F6E56; border-bottom-color: #1D9E75; font-weight: 600; }
 .sec-lbl { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin: 1rem 0 .5rem; }
 .mc { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: .75rem 1rem; display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .mc.in { border-left: 3px solid #1D9E75; }
-.av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; }
+.av { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; flex-shrink: 0; overflow: hidden; }
+.av img { width: 100%; height: 100%; object-fit: cover; }
 .mi { flex: 1; min-width: 0; }
 .mn { font-size: 14px; font-weight: 600; }
 .mr { font-size: 12px; color: #888; }
@@ -40,12 +41,14 @@ input:checked + .slider:before { transform: translateX(20px); }
 .me { font-size: 11px; color: #aaa; }
 .badge-in  { background: #E1F5EE; color: #085041; font-size: 11px; padding: 3px 9px; border-radius: 99px; font-weight: 600; white-space: nowrap; }
 .badge-out { background: #f0f0ec; color: #888; font-size: 11px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
-.act-btn { padding: 6px 12px; font-size: 12px; border: 1px solid #d8d8d4; border-radius: 8px; cursor: pointer; background: none; font-weight: 500; white-space: nowrap; margin-left: 4px; }
+.act-btn { padding: 6px 10px; font-size: 12px; border: 1px solid #d8d8d4; border-radius: 8px; cursor: pointer; background: none; font-weight: 500; white-space: nowrap; margin-left: 3px; }
 .act-btn.ci   { border-color: #1D9E75; background: #E1F5EE; color: #085041; }
 .act-btn.co   { border-color: #1D9E75; color: #0F6E56; }
 .act-btn.edit { color: #888; }
+.act-btn.del  { color: #dc2626; border-color: #fca5a5; }
 .card { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 1.25rem; }
 .form-lbl { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
+.form-lbl-note { font-size: 11px; color: #aaa; display: block; margin-top: 1px; }
 .form-input { font-size: 14px; padding: 9px 12px; border: 1px solid #d8d8d4; border-radius: 8px; background: #fff; color: #1a1a18; width: 100%; margin-bottom: 10px; }
 .form-input:focus { outline: none; border-color: #1D9E75; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -54,30 +57,37 @@ input:checked + .slider:before { transform: translateX(20px); }
 .btn-primary { width: 100%; padding: 11px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
 .btn-primary:hover { background: #0F6E56; }
 .log-entry { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: #fff; border: 1px solid #e8e8e4; border-radius: 8px; font-size: 13px; margin-bottom: 6px; }
-.log-t { color: #aaa; min-width: 50px; font-variant-numeric: tabular-nums; }
+.log-t { color: #aaa; min-width: 50px; }
 .log-n { flex: 1; font-weight: 500; }
 .log-ai { color: #085041; }
 .log-ao { color: #888; }
 .empty { text-align: center; padding: 2rem; color: #aaa; font-size: 13px; }
 .loading { text-align: center; padding: 1.5rem; color: #aaa; font-size: 13px; }
 .err-msg { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: .75rem 1rem; font-size: 13px; margin-bottom: 1rem; display: none; }
-/* モーダル */
-.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:100; align-items:flex-start; justify-content:center; padding-top: 2rem; overflow-y: auto; }
+/* モーダル共通 */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100; align-items:flex-start; justify-content:center; padding: 2rem 1rem; overflow-y:auto; }
 .modal-overlay.open { display:flex; }
-.modal { background:#fff; border-radius:14px; padding:1.5rem; width:90%; max-width:420px; margin-bottom: 2rem; }
+.modal { background:#fff; border-radius:16px; padding:1.5rem; width:100%; max-width:440px; margin:auto; }
 .modal h2 { font-size:16px; font-weight:600; margin-bottom:1rem; }
 .modal-section { font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin:1rem 0 .5rem;padding-top:.75rem;border-top:1px solid #f0f0ec; }
 .modal-btns { display:flex; gap:8px; margin-top:1rem; }
 .btn-cancel { flex:1; padding:10px; background:#f0f0ec; border:none; border-radius:8px; font-size:14px; cursor:pointer; }
 .btn-save   { flex:1; padding:10px; background:#1D9E75; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; }
-.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:8px 0; border-top:1px solid #f5f5f3; }
-.toggle-lbl { font-size:13px; color:#555; }
-.mtoggle { position:relative; width:36px; height:20px; }
+.btn-delete-confirm { width:100%; padding:12px; background:#dc2626; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; margin-bottom:8px; }
+.toggle-row { display:flex; align-items:flex-start; justify-content:space-between; padding:8px 0; border-top:1px solid #f5f5f3; gap:12px; }
+.toggle-lbl { font-size:13px; color:#555; flex:1; }
+.toggle-note { font-size:11px; color:#aaa; margin-top:2px; display:block; }
+.mtoggle { position:relative; width:36px; height:20px; flex-shrink:0; margin-top:2px; }
 .mtoggle input { opacity:0; width:0; height:0; }
 .mslider { position:absolute; inset:0; background:#ccc; border-radius:10px; transition:.2s; cursor:pointer; }
 .mslider:before { content:''; position:absolute; width:14px; height:14px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
 input:checked + .mslider { background:#1D9E75; }
 input:checked + .mslider:before { transform:translateX(16px); }
+/* 写真 */
+.avatar-upload { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.avatar-prev-sm { width:56px; height:56px; border-radius:50%; background:#e8e8e4; display:flex; align-items:center; justify-content:center; font-size:11px; color:#aaa; overflow:hidden; flex-shrink:0; }
+.avatar-prev-sm img { width:100%; height:100%; object-fit:cover; }
+.btn-upload-sm { padding:7px 14px; background:#f0f0ec; border:none; border-radius:7px; font-size:12px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -86,6 +96,15 @@ input:checked + .mslider:before { transform:translateX(16px); }
 <div class="modal-overlay" id="edit-modal">
   <div class="modal">
     <h2>メンバーを編集</h2>
+    <!-- 写真 -->
+    <div class="modal-section">プロフィール写真</div>
+    <div class="avatar-upload">
+      <div class="avatar-prev-sm" id="edit-avatar-preview">写真</div>
+      <div>
+        <input type="file" id="edit-avatar-input" accept="image/*" style="display:none" onchange="previewEditAvatar(this)">
+        <button class="btn-upload-sm" onclick="document.getElementById('edit-avatar-input').click()">📷 写真を変更</button>
+      </div>
+    </div>
     <div class="modal-section">基本情報（管理者のみ）</div>
     <label class="form-lbl">本名</label>
     <input id="e-realname" class="form-input" type="text">
@@ -94,46 +113,53 @@ input:checked + .mslider:before { transform:translateX(16px); }
     <label class="form-lbl">属性</label>
     <select id="e-type" class="form-input" onchange="onTypeChange('e')">
       <option value="">選択してください</option>
-      <option value="学生（大学）">学生（大学）</option>
+      <option value="学生">学生</option>
       <option value="高校生">高校生</option>
       <option value="中学生">中学生</option>
+      <option value="小学生以下">小学生以下</option>
       <option value="コミュニケーター">コミュニケーター</option>
       <option value="スタッフ">スタッフ</option>
       <option value="URA">URA</option>
+      <option value="ものづくり職人">ものづくり職人</option>
       <option value="社会人">社会人</option>
       <option value="その他">その他</option>
     </select>
-    <div id="e-grade-wrap" style="display:none;margin-top:8px">
-      <label class="form-lbl">学年 <span style="color:#aaa;font-size:11px">任意</span></label>
+    <div id="e-grade-wrap" style="display:none">
+      <label class="form-lbl">学年</label>
       <select id="e-grade" class="form-input">
         <option value="">選択してください</option>
         <option>学部1年</option><option>学部2年</option><option>学部3年</option><option>学部4年</option>
         <option>修士1年</option><option>修士2年</option><option>博士</option>
       </select>
     </div>
-    <div id="e-schoolgrade-wrap" style="display:none;margin-top:8px">
-      <label class="form-lbl">学年 <span style="color:#aaa;font-size:11px">任意</span></label>
+    <div id="e-schoolgrade-wrap" style="display:none">
+      <label class="form-lbl">学年</label>
       <input id="e-schoolgrade" class="form-input" type="text" placeholder="例：2年">
     </div>
-    <div id="e-affiliation-wrap" style="display:none;margin-top:8px">
-      <label class="form-lbl">所属 <span style="color:#aaa;font-size:11px">任意</span></label>
+    <div id="e-affiliation-wrap" style="display:none">
+      <label class="form-lbl">所属</label>
       <input id="e-affiliation" class="form-input" type="text" placeholder="例：〇〇株式会社 営業部">
     </div>
-    <div id="e-other-wrap" style="display:none;margin-top:8px">
-      <label class="form-lbl">所属・活動など <span style="color:#aaa;font-size:11px">任意</span></label>
+    <div id="e-other-wrap" style="display:none">
+      <label class="form-lbl">所属・活動など</label>
       <input id="e-other" class="form-input" type="text" placeholder="よろしければご所属や活動などをお書きください">
     </div>
     <div class="modal-section">公開プロフィール</div>
     <label class="form-lbl">ニックネーム</label>
     <input id="e-nickname" class="form-input" type="text">
     <div class="toggle-row">
-      <span class="toggle-lbl">ニックネームを公開する</span>
+      <div class="toggle-lbl">
+        ニックネームを表示する
+        <span class="toggle-note">本名よりニックネームで呼ばれたい方はオンにしてくださいね</span>
+      </div>
       <label class="mtoggle"><input type="checkbox" id="et-nickname"><span class="mslider"></span></label>
     </div>
     <div class="toggle-row">
-      <span class="toggle-lbl">学年・役職を公開する</span>
+      <span class="toggle-lbl">学年・属性を公開する</span>
       <label class="mtoggle"><input type="checkbox" id="et-role"><span class="mslider"></span></label>
     </div>
+    <label class="form-lbl" style="margin-top:.75rem">ひとこと</label>
+    <input id="e-bio" class="form-input" type="text" placeholder="例：いつでも話しかけてね！">
     <div class="modal-section">興味・SNS</div>
     <label class="form-lbl">興味・得意分野</label>
     <input id="e-interests" class="form-input" type="text">
@@ -160,6 +186,19 @@ input:checked + .mslider:before { transform:translateX(16px); }
   </div>
 </div>
 
+<!-- 削除確認モーダル -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal">
+    <h2>メンバーを削除</h2>
+    <p style="font-size:14px;color:#555;margin-bottom:1.5rem;line-height:1.7">
+      <strong id="delete-name"></strong>さんを削除します。<br>
+      この操作は取り消せません。本当に削除してよろしいですか？
+    </p>
+    <button class="btn-delete-confirm" onclick="confirmDelete()">削除する</button>
+    <button class="btn-cancel" onclick="closeDelete()" style="width:100%">← 戻る</button>
+  </div>
+</div>
+
 <div class="page">
   <h1><span class="live"></span>管理画面</h1>
   <p class="sub" id="today-date"></p>
@@ -171,7 +210,7 @@ input:checked + .mslider:before { transform:translateX(16px); }
   </div>
   <div class="pub-row">
     <div><div class="pub-lbl">公開ページ</div><div class="pub-sub" id="pub-sub">外部向け在室状況ページ</div></div>
-    <label class="toggle"><input type="checkbox" id="pub-toggle" onchange="setPublic(this.checked)"><span class="slider"></span></label>
+    <label class="ptoggle"><input type="checkbox" id="pub-toggle" onchange="setPublic(this.checked)"><span class="pslider"></span></label>
   </div>
   <div class="tabs">
     <button class="tab active" onclick="showTab('members')">メンバー</button>
@@ -184,15 +223,31 @@ input:checked + .mslider:before { transform:translateX(16px); }
       <p style="font-size:15px;font-weight:600;margin-bottom:1rem">新規メンバー登録</p>
       <div class="grid2">
         <div><label class="form-lbl">本名</label><input id="f-name" class="form-input" type="text" placeholder="山田 太郎"></div>
-        <div><label class="form-lbl">学年・役職</label>
-          <select id="f-role" class="form-input">
+        <div><label class="form-lbl">属性</label>
+          <select id="f-type" class="form-input" onchange="onTypeChange('f')">
             <option value="">選択</option>
-            <option>1年</option><option>2年</option><option>3年</option><option>4年</option>
-            <option>修士1年</option><option>修士2年</option><option>博士</option>
-            <option>スタッフ</option><option>その他</option>
+            <option value="学生">学生</option>
+            <option value="高校生">高校生</option>
+            <option value="中学生">中学生</option>
+            <option value="小学生以下">小学生以下</option>
+            <option value="コミュニケーター">コミュニケーター</option>
+            <option value="スタッフ">スタッフ</option>
+            <option value="URA">URA</option>
+            <option value="ものづくり職人">ものづくり職人</option>
+            <option value="社会人">社会人</option>
+            <option value="その他">その他</option>
           </select>
         </div>
       </div>
+      <div id="f-grade-wrap" style="display:none"><label class="form-lbl">学年</label>
+        <select id="f-grade" class="form-input"><option value="">選択</option>
+          <option>学部1年</option><option>学部2年</option><option>学部3年</option><option>学部4年</option>
+          <option>修士1年</option><option>修士2年</option><option>博士</option>
+        </select>
+      </div>
+      <div id="f-schoolgrade-wrap" style="display:none"><label class="form-lbl">学年</label><input id="f-schoolgrade" class="form-input" type="text" placeholder="例：2年"></div>
+      <div id="f-affiliation-wrap" style="display:none"><label class="form-lbl">所属</label><input id="f-affiliation" class="form-input" type="text" placeholder="例：〇〇株式会社"></div>
+      <div id="f-other-wrap" style="display:none"><label class="form-lbl">所属・活動など</label><input id="f-other" class="form-input" type="text" placeholder="よろしければご所属や活動などをお書きください"></div>
       <label class="form-lbl">メールアドレス</label>
       <input id="f-email" class="form-input" type="email" placeholder="taro@example.com">
       <label class="form-lbl">ニックネーム</label>
@@ -229,6 +284,7 @@ const colorMap = {
 };
 let selColor = 'teal';
 let editingId = null;
+let deletingId = null;
 
 function initials(name) {
   if (!name) return '?';
@@ -245,6 +301,50 @@ function showError(id, msg) {
   if (!el) return;
   el.style.display = 'block'; el.textContent = msg;
 }
+function buildRoleDisplay(m) {
+  const type = m.member_type || '';
+  const aff  = m.affiliation || '';
+  if (!type) return m.role || '';
+  if (aff) return type + '（' + aff + '）';
+  return type;
+}
+
+// 属性切り替え
+function onTypeChange(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  ['grade-wrap','schoolgrade-wrap','affiliation-wrap','other-wrap'].forEach(id => {
+    const el = document.getElementById(prefix + '-' + id);
+    if (el) el.style.display = 'none';
+  });
+  if (type === '学生') document.getElementById(prefix + '-grade-wrap').style.display = 'block';
+  if (type === '高校生' || type === '中学生' || type === '小学生以下') document.getElementById(prefix + '-schoolgrade-wrap').style.display = 'block';
+  if (type === '社会人') document.getElementById(prefix + '-affiliation-wrap').style.display = 'block';
+  if (type === 'その他') document.getElementById(prefix + '-other-wrap').style.display = 'block';
+}
+
+function buildRole(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  if (type === '学生') {
+    const grade = document.getElementById(prefix + '-grade') ? document.getElementById(prefix + '-grade').value : '';
+    return grade ? '学生（' + grade + '）' : '学生';
+  }
+  if (['高校生','中学生','小学生以下'].includes(type)) {
+    const gradeEl = document.getElementById(prefix + '-schoolgrade');
+    const grade = gradeEl ? gradeEl.value.trim() : '';
+    return grade ? type + '（' + grade + '）' : type;
+  }
+  if (type === '社会人') {
+    const affEl = document.getElementById(prefix + '-affiliation');
+    const aff = affEl ? affEl.value.trim() : '';
+    return aff ? '社会人（' + aff + '）' : '社会人';
+  }
+  if (type === 'その他') {
+    const otherEl = document.getElementById(prefix + '-other');
+    const other = otherEl ? otherEl.value.trim() : '';
+    return other ? other : 'その他';
+  }
+  return type || 'メンバー';
+}
 
 async function loadMembers() {
   document.getElementById('members-loading').style.display = 'block';
@@ -253,8 +353,7 @@ async function loadMembers() {
   if (error) { showError('err-msg', 'エラー: ' + error.message); return; }
   window._membersCache = data || [];
   renderMembers(data || []);
-  const inC = (data||[]).filter(m => m.is_checked_in).length;
-  document.getElementById('s-in').textContent    = inC;
+  document.getElementById('s-in').textContent    = (data||[]).filter(m => m.is_checked_in).length;
   document.getElementById('s-today').textContent = (data||[]).filter(m => m.visited_today).length;
   document.getElementById('s-total').textContent = (data||[]).length;
 }
@@ -265,7 +364,7 @@ function renderMembers(members) {
   const outM = members.filter(m => !m.is_checked_in);
   let html = '';
   if (inM.length)  { html += '<div class="sec-lbl">在室中 (' + inM.length + ')</div>'; inM.forEach(m => { html += memberCard(m); }); }
-  if (outM.length) { html += '<div class="sec-lbl">退室中</div>';                        outM.forEach(m => { html += memberCard(m); }); }
+  if (outM.length) { html += '<div class="sec-lbl">退室中</div>'; outM.forEach(m => { html += memberCard(m); }); }
   if (!members.length) html = '<div class="empty">登録メンバーがいません</div>';
   el.innerHTML = html;
 }
@@ -273,20 +372,26 @@ function renderMembers(members) {
 function memberCard(m) {
   const c   = colorMap[m.color] || colorMap.teal;
   const dn  = (m.show_nickname && m.nickname) ? m.nickname : m.name;
-  const realStr = (m.real_name && m.real_name !== m.name) ? m.real_name : '';
+  const roleStr = buildRoleDisplay(m);
+  const realStr = (m.real_name && m.real_name !== dn) ? ' <span style="font-size:11px;color:#aaa;font-weight:400">(' + m.real_name + ')</span>' : '';
   const badge   = m.is_checked_in ? '<span class="badge-in">在室</span>' : '<span class="badge-out">退室</span>';
   const timeStr = m.is_checked_in && m.checked_in_at ? '<div class="mt">' + fmtTime(m.checked_in_at) + ' より</div>' : '';
   const emailStr = m.email ? '<div class="me">' + m.email + '</div>' : '';
+  const avHtml = m.avatar_url
+    ? '<div class="av"><img src="' + m.avatar_url + '" alt=""></div>'
+    : '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(dn) + '</div>';
   const btn = m.is_checked_in
-    ? '<button class="act-btn co"   onclick="toggleMember(\'' + m.id + '\', false)">退館</button>'
-    : '<button class="act-btn ci"   onclick="toggleMember(\'' + m.id + '\', true)">入館</button>';
-  const editBtn = '<button class="act-btn edit" onclick="openEdit(\'' + m.id + '\')">編集</button>';
+    ? '<button class="act-btn co" onclick="toggleMember(\'' + m.id + '\', false)">退館</button>'
+    : '<button class="act-btn ci" onclick="toggleMember(\'' + m.id + '\', true)">入館</button>';
   return '<div class="mc' + (m.is_checked_in ? ' in' : '') + '">'
-    + '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(dn) + '</div>'
-    + '<div class="mi"><div class="mn">' + dn + (realStr ? ' <span style="font-size:11px;color:#aaa;font-weight:400">(' + realStr + ')</span>' : '') + '</div>'
-    + '<div class="mr">' + (m.role||'') + '</div>'
+    + avHtml
+    + '<div class="mi"><div class="mn">' + dn + realStr + '</div>'
+    + '<div class="mr">' + roleStr + '</div>'
     + emailStr + timeStr + '</div>'
-    + badge + editBtn + btn + '</div>';
+    + badge
+    + '<button class="act-btn edit" onclick="openEdit(\'' + m.id + '\')">編集</button>'
+    + '<button class="act-btn del"  onclick="openDelete(\'' + m.id + '\')">削除</button>'
+    + btn + '</div>';
 }
 
 async function toggleMember(id, isIn) {
@@ -298,63 +403,59 @@ async function toggleMember(id, isIn) {
   await loadMembers();
 }
 
-function onTypeChange(prefix) {
-  const type = document.getElementById(prefix + '-type').value;
-  ['grade-wrap','schoolgrade-wrap','affiliation-wrap','other-wrap'].forEach(id => {
-    const el = document.getElementById(prefix + '-' + id);
-    if (el) el.style.display = 'none';
-  });
-  if (type === '学生（大学）') document.getElementById(prefix + '-grade-wrap').style.display = 'block';
-  if (type === '高校生' || type === '中学生') document.getElementById(prefix + '-schoolgrade-wrap').style.display = 'block';
-  if (type === '社会人') document.getElementById(prefix + '-affiliation-wrap').style.display = 'block';
-  if (type === 'その他') document.getElementById(prefix + '-other-wrap').style.display = 'block';
-}
-
-function buildRole(prefix) {
-  const type = document.getElementById(prefix + '-type').value;
-  if (type === '学生（大学）') {
-    const grade = document.getElementById(prefix + '-grade').value;
-    return grade ? grade : '学生（大学）';
-  }
-  if (type === '高校生' || type === '中学生') {
-    const grade = document.getElementById(prefix + '-schoolgrade').value.trim();
-    return grade ? type + grade : type;
-  }
-  if (type === '社会人') {
-    const aff = document.getElementById(prefix + '-affiliation').value.trim();
-    return aff ? '社会人・' + aff : '社会人';
-  }
-  if (type === 'その他') {
-    const other = document.getElementById(prefix + '-other').value.trim();
-    return other ? other : 'その他';
-  }
-  return type || 'メンバー';
+// 写真プレビュー（編集）
+function previewEditAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('edit-avatar-preview');
+    prev.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover">';
+  };
+  reader.readAsDataURL(file);
 }
 
 function openEdit(id) {
-  const members = window._membersCache || [];
-  const m = members.find(x => x.id === id);
+  const m = (window._membersCache || []).find(x => x.id === id);
   if (!m) return;
   editingId = id;
+  // 写真
+  const prev = document.getElementById('edit-avatar-preview');
+  if (m.avatar_url) {
+    prev.innerHTML = '<img src="' + m.avatar_url + '" style="width:100%;height:100%;object-fit:cover">';
+  } else {
+    prev.textContent = '写真';
+  }
+  document.getElementById('edit-avatar-input').value = '';
   document.getElementById('e-realname').value    = m.real_name || m.name || '';
   document.getElementById('e-email').value       = m.email || '';
   document.getElementById('e-nickname').value    = m.nickname || '';
   document.getElementById('et-nickname').checked = m.show_nickname !== false;
   document.getElementById('et-role').checked     = m.show_role !== false;
+  document.getElementById('e-bio').value         = m.bio || '';
   document.getElementById('e-interests').value   = m.interests || '';
   document.getElementById('et-interests').checked = !!m.show_interests;
   document.getElementById('e-facebook').value    = m.facebook_url || '';
   document.getElementById('et-facebook').checked = !!m.show_facebook;
   document.getElementById('e-linkedin').value    = m.linkedin_url || '';
   document.getElementById('et-linkedin').checked = !!m.show_linkedin;
-  // 属性セット
+  // 属性
   const typeEl = document.getElementById('e-type');
   typeEl.value = m.member_type || '';
   onTypeChange('e');
-  if (m.member_type === '学生（大学）') document.getElementById('e-grade').value = m.role || '';
-  if (m.member_type === '高校生' || m.member_type === '中学生') document.getElementById('e-schoolgrade').value = m.affiliation || '';
-  if (m.member_type === '社会人') document.getElementById('e-affiliation').value = m.affiliation || '';
-  if (m.member_type === 'その他') document.getElementById('e-other').value = m.affiliation || '';
+  if (m.member_type === '学生') {
+    const gradeEl = document.getElementById('e-grade');
+    if (gradeEl) gradeEl.value = m.affiliation || '';
+  } else if (['高校生','中学生','小学生以下'].includes(m.member_type)) {
+    const el = document.getElementById('e-schoolgrade');
+    if (el) el.value = m.affiliation || '';
+  } else if (m.member_type === '社会人') {
+    const el = document.getElementById('e-affiliation');
+    if (el) el.value = m.affiliation || '';
+  } else if (m.member_type === 'その他') {
+    const el = document.getElementById('e-other');
+    if (el) el.value = m.affiliation || '';
+  }
   document.getElementById('edit-modal').classList.add('open');
 }
 
@@ -365,17 +466,32 @@ function closeEdit() {
 
 async function saveEdit() {
   if (!editingId) return;
-  const realName    = document.getElementById('e-realname').value.trim();
-  const nickname    = document.getElementById('e-nickname').value.trim();
-  const memberType  = document.getElementById('e-type').value;
-  const role        = buildRole('e');
-  const affiliation = memberType === '社会人'   ? document.getElementById('e-affiliation').value.trim() || null
-                    : memberType === 'その他'    ? document.getElementById('e-other').value.trim() || null
-                    : (memberType === '高校生' || memberType === '中学生') ? document.getElementById('e-schoolgrade').value.trim() || null
+  const realName   = document.getElementById('e-realname').value.trim();
+  const nickname   = document.getElementById('e-nickname').value.trim();
+  const memberType = document.getElementById('e-type').value;
+  const role       = buildRole('e');
+  const affiliation = memberType === '学生'     ? (document.getElementById('e-grade') ? document.getElementById('e-grade').value || null : null)
+                    : ['高校生','中学生','小学生以下'].includes(memberType) ? (document.getElementById('e-schoolgrade') ? document.getElementById('e-schoolgrade').value.trim() || null : null)
+                    : memberType === '社会人'   ? (document.getElementById('e-affiliation') ? document.getElementById('e-affiliation').value.trim() || null : null)
+                    : memberType === 'その他'   ? (document.getElementById('e-other') ? document.getElementById('e-other').value.trim() || null : null)
                     : null;
-  await db.from('members').update({
-    name:           realName,
-    real_name:      realName,
+
+  // 写真アップロード
+  let avatarUrl = undefined;
+  const fileInput = document.getElementById('edit-avatar-input');
+  if (fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const ext  = file.name.split('.').pop();
+    const path = 'member-' + editingId + '.' + ext;
+    const { error: upErr } = await db.storage.from('avatars').upload(path, file, { upsert: true });
+    if (!upErr) {
+      const { data: urlData } = db.storage.from('avatars').getPublicUrl(path);
+      avatarUrl = urlData.publicUrl;
+    }
+  }
+
+  const updateData = {
+    name: realName, real_name: realName,
     email:          document.getElementById('e-email').value.trim() || null,
     role,
     member_type:    memberType || null,
@@ -383,32 +499,65 @@ async function saveEdit() {
     nickname:       nickname || null,
     show_nickname:  document.getElementById('et-nickname').checked,
     show_role:      document.getElementById('et-role').checked,
+    bio:            document.getElementById('e-bio').value.trim() || null,
     interests:      document.getElementById('e-interests').value.trim() || null,
     show_interests: document.getElementById('et-interests').checked,
     facebook_url:   document.getElementById('e-facebook').value.trim() || null,
     show_facebook:  document.getElementById('et-facebook').checked,
     linkedin_url:   document.getElementById('e-linkedin').value.trim() || null,
     show_linkedin:  document.getElementById('et-linkedin').checked,
-  }).eq('id', editingId);
+  };
+  if (avatarUrl !== undefined) updateData.avatar_url = avatarUrl;
+
+  await db.from('members').update(updateData).eq('id', editingId);
   closeEdit();
+  await loadMembers();
+}
+
+// 削除
+function openDelete(id) {
+  const m = (window._membersCache || []).find(x => x.id === id);
+  if (!m) return;
+  deletingId = id;
+  const dn = (m.show_nickname && m.nickname) ? m.nickname : m.name;
+  document.getElementById('delete-name').textContent = dn;
+  document.getElementById('delete-modal').classList.add('open');
+}
+
+function closeDelete() {
+  deletingId = null;
+  document.getElementById('delete-modal').classList.remove('open');
+}
+
+async function confirmDelete() {
+  if (!deletingId) return;
+  await db.from('members').delete().eq('id', deletingId);
+  closeDelete();
   await loadMembers();
 }
 
 async function addMember() {
   const name = document.getElementById('f-name').value.trim();
   if (!name) { showError('add-err', '本名を入力してください'); return; }
+  const memberType = document.getElementById('f-type').value;
+  const role = buildRole('f');
+  const affiliation = memberType === '学生'     ? (document.getElementById('f-grade') ? document.getElementById('f-grade').value || null : null)
+                    : ['高校生','中学生','小学生以下'].includes(memberType) ? (document.getElementById('f-schoolgrade') ? document.getElementById('f-schoolgrade').value.trim() || null : null)
+                    : memberType === '社会人'   ? (document.getElementById('f-affiliation') ? document.getElementById('f-affiliation').value.trim() || null : null)
+                    : memberType === 'その他'   ? (document.getElementById('f-other') ? document.getElementById('f-other').value.trim() || null : null)
+                    : null;
   const { error } = await db.from('members').insert({
     name, real_name: name,
-    role:     document.getElementById('f-role').value || 'メンバー',
-    email:    document.getElementById('f-email').value.trim() || null,
-    nickname: document.getElementById('f-nickname').value.trim() || null,
-    color:    selColor,
+    role,
+    member_type:  memberType || null,
+    affiliation,
+    email:        document.getElementById('f-email').value.trim() || null,
+    nickname:     document.getElementById('f-nickname').value.trim() || null,
+    color:        selColor,
   });
   if (error) { showError('add-err', '登録エラー: ' + error.message); return; }
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-role').value = '';
-  document.getElementById('f-email').value = '';
-  document.getElementById('f-nickname').value = '';
+  ['f-name','f-email','f-nickname'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-type').value = '';
   document.getElementById('add-err').style.display = 'none';
   await loadMembers();
   showTab('members');

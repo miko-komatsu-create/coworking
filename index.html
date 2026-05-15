@@ -4,53 +4,74 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>在室状況 — コワーキングスペース</title>
+<meta http-equiv="refresh" content="30">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; color: #1a1a18; min-height: 100vh; }
-.page { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-.header { border-bottom: 1px solid #e8e8e4; padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
-.space-name { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
-.meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.page { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+.header { border-bottom: 1px solid #e8e8e4; padding-bottom: 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.header-left .space-name { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #1D9E75; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 .meta-text { font-size: 13px; color: #888; }
+.btn-checkout-top { padding: 10px 18px; background: #fff; color: #0F6E56; border: 2px solid #1D9E75; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block; }
 .count-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
 .count-card { background: #fff; border-radius: 12px; border: 1px solid #e8e8e4; padding: 1rem; }
 .count-num { font-size: 32px; font-weight: 700; line-height: 1; }
 .count-lbl { font-size: 12px; color: #888; margin-top: 6px; }
 .sec-lbl { font-size: 12px; color: #aaa; text-transform: uppercase; letter-spacing: .06em; margin-bottom: .75rem; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 1.5rem; }
-.pub-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; border-top: 3px solid #1D9E75; }
-.av { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 12px; margin-bottom: 1.5rem; }
+.pub-card { background: #fff; border: 1px solid #e8e8e4; border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; border-top: 3px solid #1D9E75; cursor: pointer; transition: box-shadow .15s; }
+.pub-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.av { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; overflow: hidden; }
+.av img { width: 100%; height: 100%; object-fit: cover; }
 .pname { font-size: 15px; font-weight: 600; }
 .prole { font-size: 12px; color: #888; }
-.pinterests { font-size: 12px; color: #555; background: #f0f0ec; border-radius: 99px; padding: 3px 10px; margin-top: 2px; }
+.pbio { font-size: 12px; color: #555; }
 .psince { font-size: 11px; color: #1D9E75; }
-.plinks { display: flex; gap: 8px; margin-top: 4px; }
-.plink { font-size: 11px; color: #1D9E75; text-decoration: none; border: 1px solid #d8f0e8; border-radius: 99px; padding: 2px 8px; }
-.plink:hover { background: #E1F5EE; }
-.empty-box { text-align: center; padding: 3rem 1rem; background: #fff; border: 1px dashed #d8d8d4; border-radius: 12px; color: #aaa; font-size: 14px; }
-.closed-box { background: #fff; border: 1px solid #e8e8e4; border-radius: 12px; padding: 2.5rem; text-align: center; }
+.empty-box { text-align: center; padding: 3rem 1rem; background: #fff; border: 1px dashed #d8d8d4; border-radius: 12px; color: #aaa; font-size: 14px; grid-column: 1/-1; }
 .footer { font-size: 12px; color: #ccc; text-align: center; padding-top: 1.5rem; border-top: 1px solid #e8e8e4; }
 .loading { text-align: center; padding: 2rem; color: #aaa; font-size: 14px; }
 .admin-link { position: fixed; bottom: 16px; right: 16px; font-size: 11px; color: #ccc; text-decoration: none; }
+
+/* プロフィールモーダル */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:100; align-items:flex-end; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.profile-modal { background:#fff; border-radius:20px 20px 0 0; padding:2rem 1.5rem 3rem; width:100%; max-width:480px; text-align:center; animation: slideUp .2s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.pm-av { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; overflow: hidden; }
+.pm-av img { width: 100%; height: 100%; object-fit: cover; }
+.pm-name { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.pm-role { font-size: 14px; color: #888; margin-bottom: .5rem; }
+.pm-bio { font-size: 14px; color: #555; background: #f5f5f3; border-radius: 10px; padding: 8px 16px; margin-bottom: 1rem; display: inline-block; }
+.pm-since { font-size: 13px; color: #1D9E75; margin-bottom: 1rem; }
+.pm-interests { font-size: 13px; color: #333; margin-bottom: 1rem; }
+.pm-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.pm-link { font-size: 13px; color: #1D9E75; text-decoration: none; border: 1px solid #b2dfd0; border-radius: 99px; padding: 5px 14px; }
+.pm-link:hover { background: #E1F5EE; }
+.pm-close { width: 100%; padding: 13px; background: #f0f0ec; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.pm-divider { border: none; border-top: 1px solid #f0f0ec; margin: 1rem 0; }
 </style>
 </head>
 <body>
 <div class="page">
   <div class="header">
-    <div class="space-name">コワーキングスペース</div>
-    <div class="meta">
-      <span class="live-dot"></span>
-      <span class="meta-text" id="today-date"></span>
-      <span class="meta-text">最終更新: <span id="last-updated">—</span></span>
+    <div class="header-left">
+      <div class="space-name">コワーキングスペース</div>
+      <div class="meta">
+        <span class="live-dot"></span>
+        <span class="meta-text" id="today-date"></span>
+        <span class="meta-text">更新: <span id="last-updated">—</span></span>
+      </div>
     </div>
+    <a href="/checkin.html" class="btn-checkout-top">👋 退館する</a>
   </div>
   <div class="loading" id="loading">読み込み中…</div>
   <div id="main" style="display:none">
     <div id="closed-view" style="display:none">
-      <div class="closed-box">
+      <div style="background:#fff;border:1px solid #e8e8e4;border-radius:12px;padding:2.5rem;text-align:center">
         <p style="font-size:24px;margin-bottom:12px">🔒</p>
         <p style="font-size:15px;font-weight:600;margin-bottom:6px">現在非公開です</p>
         <p style="font-size:13px;color:#888">このページは現在非公開に設定されています</p>
@@ -67,6 +88,22 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
   </div>
   <div class="footer">最終更新: <span id="footer-updated">—</span></div>
 </div>
+
+<!-- プロフィールモーダル -->
+<div class="modal-overlay" id="profile-modal" onclick="closeProfile(event)">
+  <div class="profile-modal" id="profile-content">
+    <div class="pm-av" id="pm-av"></div>
+    <div class="pm-name" id="pm-name"></div>
+    <div class="pm-role" id="pm-role"></div>
+    <div id="pm-bio-wrap" style="display:none"><div class="pm-bio" id="pm-bio"></div></div>
+    <div id="pm-since-wrap" style="display:none"><div class="pm-since" id="pm-since"></div></div>
+    <hr class="pm-divider">
+    <div id="pm-interests-wrap" style="display:none"><div class="pm-interests" id="pm-interests"></div></div>
+    <div class="pm-links" id="pm-links"></div>
+    <button class="pm-close" onclick="document.getElementById('profile-modal').classList.remove('open')">閉じる</button>
+  </div>
+</div>
+
 <a href="/admin.html" class="admin-link">管理</a>
 
 <script>
@@ -98,6 +135,13 @@ function nowStr() {
   const d = new Date();
   return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
+function buildRoleDisplay(m) {
+  const type = m.member_type || '';
+  const aff  = m.affiliation || '';
+  if (!type) return m.role || '';
+  if (aff) return type + '（' + aff + '）';
+  return type;
+}
 
 async function loadAll() {
   const [{ data: members }, { data: settings }] = await Promise.all([
@@ -127,24 +171,82 @@ async function loadAll() {
 
   const grid = document.getElementById('member-grid');
   if (!inMembers.length) {
-    grid.innerHTML = '<div class="empty-box" style="grid-column:1/-1">現在在室中のメンバーはいません</div>';
+    grid.innerHTML = '<div class="empty-box">現在在室中のメンバーはいません</div>';
     return;
   }
   grid.innerHTML = inMembers.map(m => {
     const c  = colorMap[m.color] || colorMap.teal;
     const dn = (m.show_nickname && m.nickname) ? m.nickname : (m.show_nickname !== false ? m.name : '匿名');
-    let html = '<div class="pub-card">'
-      + '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(dn) + '</div>'
-      + '<div class="pname">' + dn + '</div>';
-    if (m.show_role && m.role)           html += '<div class="prole">' + m.role + '</div>';
-    if (m.show_interests && m.interests) html += '<div class="pinterests">' + m.interests + '</div>';
-    if (m.checked_in_at)                 html += '<div class="psince">' + fmtTime(m.checked_in_at) + '〜</div>';
-    const links = [];
-    if (m.show_facebook && m.facebook_url) links.push('<a class="plink" href="' + m.facebook_url + '" target="_blank">Facebook</a>');
-    if (m.show_linkedin && m.linkedin_url) links.push('<a class="plink" href="' + m.linkedin_url + '" target="_blank">LinkedIn</a>');
-    if (links.length) html += '<div class="plinks">' + links.join('') + '</div>';
-    return html + '</div>';
+    const avHtml = m.avatar_url
+      ? '<div class="av"><img src="' + m.avatar_url + '" alt=""></div>'
+      : '<div class="av" style="background:' + c.bg + ';color:' + c.text + '">' + initials(dn) + '</div>';
+    const roleStr = m.show_role !== false ? buildRoleDisplay(m) : '';
+    return '<div class="pub-card" onclick="openProfile(\'' + m.id + '\')">'
+      + avHtml
+      + '<div class="pname">' + dn + '</div>'
+      + (roleStr ? '<div class="prole">' + roleStr + '</div>' : '')
+      + (m.bio ? '<div class="pbio">' + m.bio + '</div>' : '')
+      + (m.checked_in_at ? '<div class="psince">' + fmtTime(m.checked_in_at) + '〜</div>' : '')
+      + '</div>';
   }).join('');
+
+  window._publicMembers = members;
+}
+
+function openProfile(id) {
+  const members = window._publicMembers || [];
+  const m = members.find(x => x.id === id);
+  if (!m) return;
+  const c  = colorMap[m.color] || colorMap.teal;
+  const dn = (m.show_nickname && m.nickname) ? m.nickname : m.name;
+
+  // アバター
+  const avEl = document.getElementById('pm-av');
+  if (m.avatar_url) {
+    avEl.innerHTML = '<img src="' + m.avatar_url + '" alt="">';
+    avEl.style.background = 'transparent';
+  } else {
+    avEl.textContent = initials(dn);
+    avEl.style.background = c.bg;
+    avEl.style.color = c.text;
+  }
+
+  document.getElementById('pm-name').textContent = dn;
+  document.getElementById('pm-role').textContent = m.show_role !== false ? buildRoleDisplay(m) : '';
+
+  if (m.bio) {
+    document.getElementById('pm-bio').textContent = m.bio;
+    document.getElementById('pm-bio-wrap').style.display = 'block';
+  } else {
+    document.getElementById('pm-bio-wrap').style.display = 'none';
+  }
+
+  if (m.checked_in_at) {
+    document.getElementById('pm-since').textContent = fmtTime(m.checked_in_at) + ' から在室中';
+    document.getElementById('pm-since-wrap').style.display = 'block';
+  } else {
+    document.getElementById('pm-since-wrap').style.display = 'none';
+  }
+
+  if (m.show_interests && m.interests) {
+    document.getElementById('pm-interests').textContent = '🔍 ' + m.interests;
+    document.getElementById('pm-interests-wrap').style.display = 'block';
+  } else {
+    document.getElementById('pm-interests-wrap').style.display = 'none';
+  }
+
+  const links = [];
+  if (m.show_facebook && m.facebook_url) links.push('<a class="pm-link" href="' + m.facebook_url + '" target="_blank">Facebook</a>');
+  if (m.show_linkedin && m.linkedin_url) links.push('<a class="pm-link" href="' + m.linkedin_url + '" target="_blank">LinkedIn</a>');
+  document.getElementById('pm-links').innerHTML = links.join('');
+
+  document.getElementById('profile-modal').classList.add('open');
+}
+
+function closeProfile(e) {
+  if (e.target === document.getElementById('profile-modal')) {
+    document.getElementById('profile-modal').classList.remove('open');
+  }
 }
 
 db.channel('public-realtime')

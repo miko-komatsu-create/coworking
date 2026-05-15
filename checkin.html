@@ -17,10 +17,12 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 
 /* チェックイン画面 */
 .checkin-card { background: #fff; border-radius: 20px; border: 1px solid #e8e8e4; padding: 2.5rem 2rem; text-align: center; }
-.ci-av { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 1rem; }
+.ci-av { width: 88px; height: 88px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 700; margin: 0 auto 1rem; overflow: hidden; }
+.ci-av img { width: 100%; height: 100%; object-fit: cover; }
 .ci-name { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
-.ci-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
-.ci-interests { font-size: 13px; color: #555; background: #f0f0ec; border-radius: 99px; padding: 4px 14px; display: inline-block; margin-bottom: 1.5rem; }
+.ci-sub { font-size: 14px; color: #888; margin-bottom: .5rem; }
+.ci-bio { font-size: 13px; color: #555; background: #f0f0ec; border-radius: 99px; padding: 5px 14px; display: inline-block; margin-bottom: 1.25rem; }
+.ci-interests { font-size: 12px; color: #1D9E75; margin-bottom: 1.25rem; }
 .ci-status { font-size: 14px; margin-bottom: 1.75rem; padding: 12px; background: #f5f5f3; border-radius: 10px; }
 .ci-status.in { color: #085041; background: #E1F5EE; }
 .btn-checkin  { width: 100%; padding: 18px; background: #1D9E75; color: #fff; border: none; border-radius: 14px; font-size: 18px; font-weight: 700; cursor: pointer; margin-bottom: 12px; }
@@ -31,11 +33,12 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 .done-card { background: #fff; border-radius: 20px; border: 1px solid #e8e8e4; padding: 2.5rem 2rem; text-align: center; }
 .done-icon { font-size: 56px; margin-bottom: 1rem; }
 .done-msg { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.done-sub { font-size: 14px; color: #888; margin-bottom: 1.75rem; }
+.done-sub { font-size: 14px; color: #888; margin-bottom: .5rem; }
 .done-time { font-size: 13px; color: #1D9E75; margin-bottom: 1.5rem; }
+.done-note { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
 .btn-return { width: 100%; padding: 14px; background: #f0f0ec; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
 
-/* 登録フォーム */
+/* フォーム共通 */
 .form-header { text-align: center; margin-bottom: 1.5rem; }
 .form-title { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
 .form-sub { font-size: 13px; color: #888; }
@@ -45,11 +48,13 @@ body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f3; c
 .field:last-child { margin-bottom: 0; }
 .flabel { font-size: 13px; color: #555; display: block; margin-bottom: 5px; }
 .flabel span { color: #aaa; font-size: 11px; margin-left: 4px; }
+.flabel-note { font-size: 11px; color: #aaa; display: block; margin-top: 2px; }
 .finput { font-size: 15px; padding: 11px 13px; border: 1px solid #d8d8d4; border-radius: 9px; background: #fff; color: #1a1a18; width: 100%; }
 .finput:focus { outline: none; border-color: #1D9E75; }
-.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid #f0f0ec; }
-.toggle-lbl { font-size: 13px; color: #555; }
-.toggle { position: relative; width: 40px; height: 22px; }
+.toggle-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 10px 0; border-top: 1px solid #f0f0ec; gap: 12px; }
+.toggle-lbl { font-size: 13px; color: #555; flex: 1; }
+.toggle-note { font-size: 11px; color: #aaa; margin-top: 2px; display: block; }
+.toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; margin-top: 2px; }
 .toggle input { opacity: 0; width: 0; height: 0; }
 .tslider { position: absolute; inset: 0; background: #ccc; border-radius: 11px; transition: .2s; cursor: pointer; }
 .tslider:before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
@@ -58,16 +63,24 @@ input:checked + .tslider:before { transform: translateX(18px); }
 .btn-register { width: 100%; padding: 15px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: .5rem; }
 .btn-register:disabled { background: #aaa; cursor: not-allowed; }
 .err { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: .75rem 1rem; font-size: 13px; margin-bottom: 1rem; display: none; }
-.loading-screen { text-align: center; padding: 4rem 1rem; color: #aaa; }
-.loading-spinner { font-size: 32px; animation: spin 1s linear infinite; display: inline-block; margin-bottom: 1rem; }
-@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 写真アップロード */
+.avatar-upload { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.avatar-preview { width: 80px; height: 80px; border-radius: 50%; background: #e8e8e4; display: flex; align-items: center; justify-content: center; overflow: hidden; font-size: 13px; color: #aaa; }
+.avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+.btn-upload { padding: 8px 18px; background: #f0f0ec; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; }
 
 /* 既存ユーザー確認 */
 .already-card { background: #fff; border-radius: 20px; border: 1px solid #e8e8e4; padding: 2rem; text-align: center; }
 .already-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-.already-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+.already-sub { font-size: 14px; color: #888; margin-bottom: 1.5rem; line-height: 1.6; }
 .btn-yes { width: 100%; padding: 14px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; margin-bottom: 10px; }
 .btn-no  { width: 100%; padding: 14px; background: #f0f0ec; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+
+/* 再連携 */
+.relink-result { padding: .75rem; border: 1px solid #e8e8e4; border-radius: 9px; margin-bottom: 6px; cursor: pointer; background: #f9f9f7; }
+.relink-result:hover { border-color: #1D9E75; }
+.loading-screen { text-align: center; padding: 4rem 1rem; color: #aaa; }
 </style>
 </head>
 <body>
@@ -79,10 +92,7 @@ input:checked + .tslider:before { transform: translateX(18px); }
 
   <!-- ローディング -->
   <div class="screen active" id="screen-loading">
-    <div class="loading-screen">
-      <div class="loading-spinner">⏳</div>
-      <div>読み込み中…</div>
-    </div>
+    <div class="loading-screen">読み込み中…</div>
   </div>
 
   <!-- チェックイン/アウト -->
@@ -90,7 +100,8 @@ input:checked + .tslider:before { transform: translateX(18px); }
     <div class="checkin-card">
       <div class="ci-av" id="ci-av"></div>
       <div class="ci-name" id="ci-name"></div>
-      <div class="ci-sub"  id="ci-sub"></div>
+      <div class="ci-sub" id="ci-sub"></div>
+      <div id="ci-bio-wrap" style="display:none"><div class="ci-bio" id="ci-bio"></div></div>
       <div id="ci-interests-wrap" style="display:none"><div class="ci-interests" id="ci-interests"></div></div>
       <div class="ci-status" id="ci-status"></div>
       <button class="btn-checkin"  id="btn-in"  onclick="doCheckin(true)"  style="display:none">✅ 入館する</button>
@@ -106,21 +117,23 @@ input:checked + .tslider:before { transform: translateX(18px); }
       <div class="done-msg"  id="done-msg"></div>
       <div class="done-sub"  id="done-sub"></div>
       <div class="done-time" id="done-time"></div>
+      <div class="done-note" id="done-note"></div>
+      <button class="btn-return" id="btn-done-return" onclick="goToPublic()">在室メンバーを見る →</button>
     </div>
   </div>
 
-  <!-- 既存ユーザー確認（デバイスリセット後） -->
+  <!-- 既存ユーザー確認 -->
   <div class="screen" id="screen-already">
     <div class="already-card">
       <div style="font-size:36px;margin-bottom:1rem">📱</div>
       <div class="already-title">以前登録したことがありますか？</div>
-      <div class="already-sub">このデバイスの登録情報が見つかりませんでした。以前登録済みの場合は名前で検索して再連携できます。</div>
+      <div class="already-sub">このデバイスの登録情報が見つかりませんでした。<br>以前登録済みの場合は名前で検索して再連携できます。</div>
       <button class="btn-yes" onclick="showRelink()">はい、以前登録しました</button>
       <button class="btn-no"  onclick="showRegister()">初めて登録する</button>
     </div>
   </div>
 
-  <!-- 再連携（名前検索） -->
+  <!-- 再連携 -->
   <div class="screen" id="screen-relink">
     <div class="form-header">
       <div class="form-title">アカウントを探す</div>
@@ -145,6 +158,18 @@ input:checked + .tslider:before { transform: translateX(18px); }
       <div class="form-sub">登録後、QRを読み込むだけで入退館できます</div>
     </div>
     <div class="err" id="reg-err"></div>
+
+    <!-- 写真 -->
+    <div class="card">
+      <div class="card-title">プロフィール写真 <span style="font-size:11px;color:#aaa;text-transform:none;letter-spacing:0">— 任意</span></div>
+      <div class="avatar-upload">
+        <div class="avatar-preview" id="reg-avatar-preview">写真</div>
+        <input type="file" id="reg-avatar-input" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+        <button class="btn-upload" onclick="document.getElementById('reg-avatar-input').click()">📷 写真を選ぶ</button>
+      </div>
+    </div>
+
+    <!-- 基本情報 -->
     <div class="card">
       <div class="card-title">基本情報（管理者のみ表示）</div>
       <div class="field">
@@ -159,12 +184,9 @@ input:checked + .tslider:before { transform: translateX(18px); }
         <label class="flabel">属性</label>
         <select id="r-type" class="finput" onchange="onTypeChange('r')">
           <option value="">選択してください</option>
-          <option value="学生（大学）">学生（大学）</option>
+          <option value="学生">学生</option>
           <option value="高校生">高校生</option>
           <option value="中学生">中学生</option>
-          <option value="コミュニケーター">コミュニケーター</option>
-          <option value="スタッフ">スタッフ</option>
-          <option value="URA">URA</option>
           <option value="社会人">社会人</option>
           <option value="その他">その他</option>
         </select>
@@ -190,21 +212,34 @@ input:checked + .tslider:before { transform: translateX(18px); }
         <input id="r-other" class="finput" type="text" placeholder="よろしければご所属や活動などをお書きください">
       </div>
     </div>
+
+    <!-- 公開プロフィール -->
     <div class="card">
       <div class="card-title">公開プロフィール（在室ページに表示）</div>
       <div class="field">
-        <label class="flabel">ニックネーム <span>任意</span></label>
+        <label class="flabel">
+          ニックネーム <span>任意</span>
+          <span class="flabel-note">本名よりニックネームで呼ばれたい方はこちらに入力して、下のトグルをオンにしてくださいね</span>
+        </label>
         <input id="r-nickname" class="finput" type="text" placeholder="タロウ">
       </div>
       <div class="toggle-row">
-        <span class="toggle-lbl">ニックネームを公開する</span>
+        <div class="toggle-lbl">
+          ニックネームを表示する
+        </div>
         <label class="toggle"><input type="checkbox" id="t-nickname" checked><span class="tslider"></span></label>
       </div>
       <div class="toggle-row">
-        <span class="toggle-lbl">学年・役職を公開する</span>
+        <span class="toggle-lbl">学年・属性を公開する</span>
         <label class="toggle"><input type="checkbox" id="t-role"><span class="tslider"></span></label>
       </div>
+      <div class="field" style="margin-top:.75rem">
+        <label class="flabel">ひとこと <span>任意</span></label>
+        <input id="r-bio" class="finput" type="text" placeholder="例：いつでも話しかけてね！／〇〇頑張ってます！／fab機器については詳しめです！">
+      </div>
     </div>
+
+    <!-- 興味・SNS -->
     <div class="card">
       <div class="card-title">興味・SNS（すべて任意）</div>
       <div class="field">
@@ -232,16 +267,18 @@ input:checked + .tslider:before { transform: translateX(18px); }
         <label class="toggle"><input type="checkbox" id="t-linkedin"><span class="tslider"></span></label>
       </div>
     </div>
+
     <button class="btn-register" onclick="registerMember()">登録する</button>
-    <button class="btn-other" onclick="showScreen('screen-already')" style="width:100%;margin-top:4px">← 戻る</button>
+    <button class="btn-other" onclick="showScreen('screen-already')" style="width:100%;margin-top:8px">← 戻る</button>
   </div>
 </div>
 
 <script>
 const SUPABASE_URL      = 'https://qreaidasfzqiswowgsbo.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Fm-cnmeEKtXwBAZmbU89cQ_ZoA7bEI4';
-const STORAGE_KEY = 'coworking_member_id';
-const { createClient } = supabase;
+const PUBLIC_URL        = 'https://coworking-silk.vercel.app';
+const STORAGE_KEY       = 'coworking_member_id';
+const { createClient }  = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const colorMap = {
@@ -265,6 +302,16 @@ function fmtTime(iso) {
   const d = new Date(iso);
   return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
 }
+function getDisplayName(m) {
+  return (m.show_nickname && m.nickname) ? m.nickname : m.name;
+}
+function buildRoleDisplay(m) {
+  const type = m.member_type || '';
+  const aff  = m.affiliation || '';
+  if (!type) return m.role || '';
+  if (aff) return type + '（' + aff + '）';
+  return type;
+}
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -273,33 +320,41 @@ function showScreen(id) {
 function showRegister()  { showScreen('screen-register'); }
 function showRelink()    { showScreen('screen-relink'); }
 function showOtherUser() { localStorage.removeItem(STORAGE_KEY); init(); }
+function goToPublic()    { window.location.href = PUBLIC_URL; }
 
-// 起動時：localStorageにIDがあれば即チェックイン画面へ
 async function init() {
   showScreen('screen-loading');
   const savedId = localStorage.getItem(STORAGE_KEY);
   if (savedId) {
     const { data, error } = await db.from('members').select('*').eq('id', savedId).single();
-    if (data && !error) {
-      showCheckinScreen(data);
-      return;
-    }
-    // IDが無効（削除済みなど）
+    if (data && !error) { showCheckinScreen(data); return; }
     localStorage.removeItem(STORAGE_KEY);
   }
-  // 未登録 or リセット後
   showScreen('screen-already');
 }
 
 function showCheckinScreen(m) {
   currentMember = m;
-  const dn = (m.show_nickname && m.nickname) ? m.nickname : m.name;
+  const dn = getDisplayName(m);
   const c  = colorMap[m.color] || colorMap.teal;
-  document.getElementById('ci-av').style.background = c.bg;
-  document.getElementById('ci-av').style.color      = c.text;
-  document.getElementById('ci-av').textContent      = initials(dn);
-  document.getElementById('ci-name').textContent    = dn;
-  document.getElementById('ci-sub').textContent     = (m.show_role && m.role) ? m.role : '';
+  const avEl = document.getElementById('ci-av');
+  if (m.avatar_url) {
+    avEl.innerHTML = '<img src="' + m.avatar_url + '" alt="">';
+    avEl.style.background = 'transparent';
+  } else {
+    avEl.textContent = initials(dn);
+    avEl.style.background = c.bg;
+    avEl.style.color = c.text;
+  }
+  document.getElementById('ci-name').textContent = dn;
+  const roleStr = (m.show_role !== false) ? buildRoleDisplay(m) : '';
+  document.getElementById('ci-sub').textContent = roleStr;
+  if (m.bio) {
+    document.getElementById('ci-bio').textContent = m.bio;
+    document.getElementById('ci-bio-wrap').style.display = 'block';
+  } else {
+    document.getElementById('ci-bio-wrap').style.display = 'none';
+  }
   if (m.show_interests && m.interests) {
     document.getElementById('ci-interests').textContent = m.interests;
     document.getElementById('ci-interests-wrap').style.display = 'block';
@@ -335,20 +390,76 @@ async function doCheckin(isIn) {
   await db.from('checkin_logs').insert({
     member_id: currentMember.id, member_name: currentMember.name, action: isIn ? 'in' : 'out',
   });
-  const dn = (currentMember.show_nickname && currentMember.nickname) ? currentMember.nickname : currentMember.name;
+  const dn = getDisplayName(currentMember);
   document.getElementById('done-icon').textContent = isIn ? '✅' : '👋';
   document.getElementById('done-msg').textContent  = isIn ? 'いらっしゃい！' : 'お疲れ様でした！';
   document.getElementById('done-sub').textContent  = dn + 'さん';
   document.getElementById('done-time').textContent = fmtTime(now) + (isIn ? ' 入館' : ' 退館');
+  if (isIn) {
+    document.getElementById('done-note').textContent = '今日も充実した時間を！';
+    document.getElementById('btn-done-return').textContent = '在室メンバーを見る →';
+    document.getElementById('btn-done-return').onclick = goToPublic;
+  } else {
+    document.getElementById('done-note').textContent = 'またのご来館をお待ちしています！';
+    document.getElementById('btn-done-return').textContent = '一覧に戻る';
+    document.getElementById('btn-done-return').onclick = () => {
+      const { data } = db.from('members').select('*').eq('id', currentMember.id).single();
+      init();
+    };
+  }
   showScreen('screen-done');
-  // 3秒後に最新情報で戻る
-  setTimeout(async () => {
-    const { data } = await db.from('members').select('*').eq('id', currentMember.id).single();
-    if (data) showCheckinScreen(data);
-  }, 3000);
+  if (isIn) {
+    setTimeout(() => goToPublic(), 3000);
+  }
 }
 
-// 再連携：名前で検索
+// 写真プレビュー
+function previewAvatar(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('reg-avatar-preview');
+    prev.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover">';
+  };
+  reader.readAsDataURL(file);
+}
+
+// 属性切り替え
+function onTypeChange(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  ['grade-wrap','schoolgrade-wrap','affiliation-wrap','other-wrap'].forEach(id => {
+    const el = document.getElementById(prefix + '-' + id);
+    if (el) el.style.display = 'none';
+  });
+  if (type === '学生')   document.getElementById(prefix + '-grade-wrap').style.display = 'block';
+  if (type === '高校生' || type === '中学生') document.getElementById(prefix + '-schoolgrade-wrap').style.display = 'block';
+  if (type === '社会人') document.getElementById(prefix + '-affiliation-wrap').style.display = 'block';
+  if (type === 'その他') document.getElementById(prefix + '-other-wrap').style.display = 'block';
+}
+
+function buildRole(prefix) {
+  const type = document.getElementById(prefix + '-type').value;
+  if (type === '学生') {
+    const grade = document.getElementById(prefix + '-grade').value;
+    return grade ? '学生（' + grade + '）' : '学生';
+  }
+  if (type === '高校生' || type === '中学生') {
+    const grade = document.getElementById(prefix + '-schoolgrade').value.trim();
+    return grade ? type + '（' + grade + '）' : type;
+  }
+  if (type === '社会人') {
+    const aff = document.getElementById(prefix + '-affiliation').value.trim();
+    return aff ? '社会人（' + aff + '）' : '社会人';
+  }
+  if (type === 'その他') {
+    const other = document.getElementById(prefix + '-other').value.trim();
+    return other ? other : 'その他';
+  }
+  return type || 'メンバー';
+}
+
+// 再連携検索
 let relinkTimer = null;
 async function searchRelink() {
   clearTimeout(relinkTimer);
@@ -356,15 +467,18 @@ async function searchRelink() {
   const resultsEl = document.getElementById('relink-results');
   if (q.length < 1) { resultsEl.innerHTML = ''; return; }
   relinkTimer = setTimeout(async () => {
-    const { data } = await db.from('members').select('id, name, nickname, role').order('name');
+    const { data } = await db.from('members').select('id, name, nickname, role, member_type, affiliation').order('name');
     const filtered = (data || []).filter(m => {
       const n = (m.nickname || '').toLowerCase();
       const r = (m.name || '').toLowerCase();
       return n.includes(q.toLowerCase()) || r.includes(q.toLowerCase());
     });
-    if (!filtered.length) { resultsEl.innerHTML = '<p style="font-size:13px;color:#aaa;padding:.5rem 0">見つかりませんでした</p>'; return; }
+    if (!filtered.length) {
+      resultsEl.innerHTML = '<p style="font-size:13px;color:#aaa;padding:.5rem 0">見つかりませんでした</p>';
+      return;
+    }
     resultsEl.innerHTML = filtered.map(m =>
-      '<div onclick="relinkTo(\'' + m.id + '\')" style="padding:.75rem;border:1px solid #e8e8e4;border-radius:9px;margin-bottom:6px;cursor:pointer;background:#f9f9f7">'
+      '<div class="relink-result" onclick="relinkTo(\'' + m.id + '\')">'
       + '<div style="font-size:14px;font-weight:600">' + (m.nickname || m.name) + '</div>'
       + '<div style="font-size:12px;color:#888">' + (m.role || '') + '</div>'
       + '</div>'
@@ -379,70 +493,55 @@ async function relinkTo(id) {
 }
 
 // 新規登録
-// 属性切り替え
-function onTypeChange(prefix) {
-  const type = document.getElementById(prefix + '-type').value;
-  const ids = ['grade-wrap','schoolgrade-wrap','affiliation-wrap','other-wrap'];
-  ids.forEach(id => {
-    const el = document.getElementById(prefix + '-' + id);
-    if (el) el.style.display = 'none';
-  });
-  if (type === '学生（大学）')  document.getElementById(prefix + '-grade-wrap').style.display = 'block';
-  if (type === '高校生' || type === '中学生') document.getElementById(prefix + '-schoolgrade-wrap').style.display = 'block';
-  if (type === '社会人')        document.getElementById(prefix + '-affiliation-wrap').style.display = 'block';
-  if (type === 'その他')        document.getElementById(prefix + '-other-wrap').style.display = 'block';
-}
-
-// 属性からrole文字列を生成
-function buildRole(prefix) {
-  const type = document.getElementById(prefix + '-type').value;
-  if (type === '学生（大学）') {
-    const grade = document.getElementById(prefix + '-grade').value;
-    return grade ? grade : '学生（大学）';
-  }
-  if (type === '高校生' || type === '中学生') {
-    const grade = document.getElementById(prefix + '-schoolgrade').value.trim();
-    return grade ? type + grade : type;
-  }
-  if (type === '社会人') {
-    const aff = document.getElementById(prefix + '-affiliation').value.trim();
-    return aff ? '社会人・' + aff : '社会人';
-  }
-  if (type === 'その他') {
-    const other = document.getElementById(prefix + '-other').value.trim();
-    return other ? other : 'その他';
-  }
-  return type || 'メンバー';
-}
-
 async function registerMember() {
-  const realName = document.getElementById('r-realname').value.trim();
-  const errEl    = document.getElementById('reg-err');
-  errEl.style.display = 'none';
-  if (!realName) { errEl.style.display = 'block'; errEl.textContent = '本名を入力してください'; return; }
+  const realName   = document.getElementById('r-realname').value.trim();
   const memberType = document.getElementById('r-type').value;
+  const errEl      = document.getElementById('reg-err');
+  errEl.style.display = 'none';
+  if (!realName)   { errEl.style.display = 'block'; errEl.textContent = '本名を入力してください'; return; }
   if (!memberType) { errEl.style.display = 'block'; errEl.textContent = '属性を選択してください'; return; }
   const btn = document.querySelector('.btn-register');
   btn.disabled = true; btn.textContent = '登録中…';
-  const nickname    = document.getElementById('r-nickname').value.trim();
+
+  // 写真アップロード
+  let avatarUrl = null;
+  const fileInput = document.getElementById('reg-avatar-input');
+  if (fileInput.files[0]) {
+    const file = fileInput.files[0];
+    const ext  = file.name.split('.').pop();
+    const path = 'member-' + Date.now() + '.' + ext;
+    const { data: upData, error: upErr } = await db.storage.from('avatars').upload(path, file, { upsert: true });
+    if (!upErr) {
+      const { data: urlData } = db.storage.from('avatars').getPublicUrl(path);
+      avatarUrl = urlData.publicUrl;
+    }
+  }
+
   const role        = buildRole('r');
-  const affiliation = memberType === '社会人' ? document.getElementById('r-affiliation').value.trim() || null : null;
-  const colors      = ['teal','blue','pink','amber','purple','coral'];
+  const affiliation = memberType === '社会人' ? document.getElementById('r-affiliation').value.trim() || null
+                    : memberType === 'その他'  ? document.getElementById('r-other').value.trim() || null
+                    : (memberType === '高校生' || memberType === '中学生') ? document.getElementById('r-schoolgrade').value.trim() || null
+                    : memberType === '学生'    ? document.getElementById('r-grade').value || null
+                    : null;
+  const colors = ['teal','blue','pink','amber','purple','coral'];
   const { data, error } = await db.from('members').insert({
-    name: realName, real_name: realName,
+    name:           realName,
+    real_name:      realName,
     email:          document.getElementById('r-email').value.trim() || null,
     role,
     member_type:    memberType,
     affiliation,
-    nickname:       nickname || null,
+    nickname:       document.getElementById('r-nickname').value.trim() || null,
     show_nickname:  document.getElementById('t-nickname').checked,
     show_role:      document.getElementById('t-role').checked,
+    bio:            document.getElementById('r-bio').value.trim() || null,
     interests:      document.getElementById('r-interests').value.trim() || null,
     show_interests: document.getElementById('t-interests').checked,
     facebook_url:   document.getElementById('r-facebook').value.trim() || null,
     show_facebook:  document.getElementById('t-facebook').checked,
     linkedin_url:   document.getElementById('r-linkedin').value.trim() || null,
     show_linkedin:  document.getElementById('t-linkedin').checked,
+    avatar_url:     avatarUrl,
     color:          colors[Math.floor(Math.random() * colors.length)],
   }).select().single();
   btn.disabled = false; btn.textContent = '登録する';
